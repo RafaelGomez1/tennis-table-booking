@@ -8,21 +8,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
-import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.net.URL
 
 @Component
-class UpdateRankingsSubscriber(
+class UpdateRankingsScheduledJob(
     private val updater: UpdateRankingCommandHandler,
     private val configuration: CompetitionConfig
 ) {
 
     private val textStripper = PDFTextStripper()
 
-//    @EventListener(ApplicationReadyEvent::class)
-    fun invoke() = runBlocking {
+    @Scheduled(cron = "0 0 10 ? * MON *")
+    fun execute() = runBlocking {
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB) = configuration
 
         val urls = mapOf(
@@ -37,7 +36,6 @@ class UpdateRankingsSubscriber(
         urls.forEach { ( league, url) ->
             launch { processURLContent(url, league.name) }.join()
         }
-
     }
 
     private suspend fun processURLContent(url: URL, league: String) {

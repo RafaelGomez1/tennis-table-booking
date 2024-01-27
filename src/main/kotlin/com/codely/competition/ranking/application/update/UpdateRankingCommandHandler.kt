@@ -16,7 +16,7 @@ class UpdateRankingCommandHandler(
     private val updateRanking = RankingUpdater(playerRepository, clubRepository, leagueRankingRepository)
 
     suspend fun handle(command: UpdateRankingCommand) {
-        updateRanking.invoke(command.lines, League.valueOf(command.league))
+        updateRanking(command.lines, League.valueOf(command.league))
     }
 }
 

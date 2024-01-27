@@ -1,19 +1,12 @@
 package com.codely.competition.ranking.application.update
 
-import com.codely.competition.clubs.domain.Club
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.clubs.domain.ClubRepository
-import com.codely.competition.clubs.domain.SearchClubCriteria
-import com.codely.competition.clubs.domain.SearchClubCriteria.All
 import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
 import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
 import com.codely.competition.players.domain.FindPlayerCriteria.ByClubLeagueAndName
 import com.codely.competition.players.domain.PlayerRepository
-import com.codely.competition.ranking.domain.LeagueRanking
-import com.codely.competition.ranking.domain.League
-import com.codely.competition.ranking.domain.GameStats
-import com.codely.competition.ranking.domain.LeagueRankingRepository
-import com.codely.competition.ranking.domain.RankedPlayer
+import com.codely.competition.ranking.domain.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 

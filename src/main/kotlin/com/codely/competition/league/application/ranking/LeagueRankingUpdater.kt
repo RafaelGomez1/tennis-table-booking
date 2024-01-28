@@ -7,6 +7,7 @@ import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
 import com.codely.competition.players.domain.FindPlayerCriteria.ByClubLeagueAndName
 import com.codely.competition.players.domain.PlayerRepository
 import com.codely.competition.league.domain.*
+import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
@@ -26,10 +27,10 @@ class LeagueRankingUpdater(
         val rankedPlayers = sanitizedList
             .map { async { mapToPlayer(it, clubs, leagueName) }.await() }
 
-        val league = League.create(name = leagueName, players = rankedPlayers, standings = emptyMap())
-
-        leagueRepository.delete(leagueName)
-        leagueRepository.save(league)
+        leagueRepository.search(ByName(leagueName))
+            ?.updateRankings(rankedPlayers)
+            ?.let { updatedLeague -> leagueRepository.save(updatedLeague) }
+            ?: Unit
     }
 
     private suspend fun mapToPlayer(input: String, clubs: List<String>, leagueName: LeagueName): RankedPlayer {

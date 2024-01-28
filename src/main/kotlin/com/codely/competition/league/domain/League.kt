@@ -29,6 +29,8 @@ data class League(
         updatedStandings[group] = standingList
         return copy(standings = updatedStandings)
     }
+
+    fun updateRankings(newRankings: List<RankedPlayer>): League = copy(rankings = newRankings)
 }
 
 data class RankedPlayer(

@@ -5,7 +5,7 @@ import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.players.domain.Player
 import com.codely.competition.players.domain.PlayerRepository
-import com.codely.competition.ranking.domain.League
+import com.codely.competition.league.domain.LeagueName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.springframework.stereotype.Component
@@ -28,18 +28,18 @@ class UpdatePlayersCommandHandler(
         val sanitizedList = command.playerListText.subList(4, command.playerListText.size)
             .filter { line -> !BLACKLISTED_KEYWORDS.any { it in line } }
 
-        val league = League.valueOf(command.league)
+        val leagueName = LeagueName.valueOf(command.league)
 
         val clubs = sanitizedList.filter { it.isNotEmpty() && !it.first().isDigit() }
 
-        val groupedPlayers = groupByClub(sanitizedList, clubs, league)
+        val groupedPlayers = groupByClub(sanitizedList, clubs, leagueName)
         groupedPlayers.values.map { clubPlayers -> launch { createPlayers(clubPlayers) }.join() }
 
         val x = clubs.map { ClubName(it) }
-        createClubs(x, league)
+        createClubs(x, leagueName)
     }
 
-    private fun groupByClub(inputList: List<String>, clubNames: List<String>, league: League): Map<String, List<Player>> {
+    private fun groupByClub(inputList: List<String>, clubNames: List<String>, leagueName: LeagueName): Map<String, List<Player>> {
         val result = mutableMapOf<String, MutableList<Player>>()
         var currentClubName = ""
 
@@ -48,7 +48,7 @@ class UpdatePlayersCommandHandler(
                 currentClubName = input
                 result[currentClubName] = mutableListOf()
             } else if (currentClubName.isNotEmpty() && input.isNotBlank()) {
-                val player = mapToPlayer(input, currentClubName, league)
+                val player = mapToPlayer(input, currentClubName, leagueName)
                 result[currentClubName]?.add(player)
             }
         }
@@ -56,7 +56,7 @@ class UpdatePlayersCommandHandler(
         return result
     }
 
-    private fun mapToPlayer(input: String, clubName: String, league: League): Player {
+    private fun mapToPlayer(input: String, clubName: String, leagueName: LeagueName): Player {
         return input.split(" ")
             .let { elements ->
                 Player.create(
@@ -64,8 +64,8 @@ class UpdatePlayersCommandHandler(
                     name = "${elements[2]} ${elements[1]}".uppercase(),
                     club = clubName,
                     initialRanking = elements.getInitialRanking().toInt(),
-                    league = league,
-                    promotedToHigherLeagues = League.parseNames().any { it in elements.last() }
+                    leagueName = leagueName,
+                    promotedToHigherLeagues = LeagueName.parseNames().any { it in elements.last() }
                 )
             }
     }
@@ -73,7 +73,7 @@ class UpdatePlayersCommandHandler(
     private fun List<String>.getInitialRanking(): String {
         val last = last()
         return when {
-            League.parseNames().any { it in last } -> get(size - 2).removeInscriptionDate()
+            LeagueName.parseNames().any { it in last } -> get(size - 2).removeInscriptionDate()
             last.contains("/") -> last.removeInscriptionDate()
             else -> last()
         }

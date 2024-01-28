@@ -1,8 +1,8 @@
-package com.codely.competition.ranking.infrastructure.rest.search
+package com.codely.competition.league.infrastructure.rest.search
 
-import com.codely.competition.ranking.domain.GameStats
-import com.codely.competition.ranking.domain.LeagueRanking
-import com.codely.competition.ranking.domain.RankedPlayer
+import com.codely.competition.league.domain.GameStats
+import com.codely.competition.league.domain.League
+import com.codely.competition.league.domain.RankedPlayer
 
 data class LeagueRankingDocument(
     val id: String,
@@ -31,10 +31,10 @@ internal fun GameStats.toDocument(): GameStatsDocument =
 internal fun RankedPlayer.toDocument(): RankedPlayerDocument =
     RankedPlayerDocument(id = id, name = name, club = club, stats = stats.toDocument(), rankingPoints = rankingPoints)
 
-internal fun LeagueRanking.toDocument(): LeagueRankingDocument =
+internal fun League.toDocument(): LeagueRankingDocument =
     LeagueRankingDocument(
         id = id.toString(),
         name = name.name,
-        players = players.map { it.toDocument() }
+        players = rankings.map { it.toDocument() }
     )
 

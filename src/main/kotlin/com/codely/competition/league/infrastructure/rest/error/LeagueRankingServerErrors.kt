@@ -1,4 +1,4 @@
-package com.codely.competition.ranking.infrastructure.rest.error
+package com.codely.competition.league.infrastructure.rest.error
 
 object LeagueRankingServerErrors {
 

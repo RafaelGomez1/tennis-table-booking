@@ -1,9 +1,9 @@
-package com.codely.competition.ranking.infrastructure.rest.search
+package com.codely.competition.league.infrastructure.rest.search
 
-import com.codely.competition.ranking.application.search.SearchLeagueRankingQuery
-import com.codely.competition.ranking.application.search.handle
-import com.codely.competition.ranking.domain.LeagueRankingRepository
-import com.codely.competition.ranking.infrastructure.rest.error.LeagueRankingServerErrors.LEAGUE_RANKING_DOES_NOT_EXIST
+import com.codely.competition.league.application.search.SearchLeagueQuery
+import com.codely.competition.league.application.search.handle
+import com.codely.competition.league.domain.LeagueRepository
+import com.codely.competition.league.infrastructure.rest.error.LeagueRankingServerErrors.LEAGUE_RANKING_DOES_NOT_EXIST
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody
@@ -17,12 +17,12 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets.UTF_8
 
 @RestController
-class SearchRankingController(private val repository: LeagueRankingRepository): BaseController() {
+class SearchRankingController(private val repository: LeagueRepository): BaseController() {
 
     @GetMapping("/rankings")
     fun search(@RequestParam league: String, @RequestParam club: String): Response<*> = runBlocking {
         with(repository) {
-            handle(SearchLeagueRankingQuery(league, club.decodedParameter()))
+            handle(SearchLeagueQuery(league, club.decodedParameter()))
                 ?.let { ranking -> Response.status(OK).body(ranking.toDocument()) }
                 ?: Response.status(NOT_FOUND).withBody(LEAGUE_RANKING_DOES_NOT_EXIST)
         }

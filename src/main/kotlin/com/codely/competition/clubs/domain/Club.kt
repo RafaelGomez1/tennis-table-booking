@@ -1,11 +1,11 @@
 package com.codely.competition.clubs.domain
 
-import com.codely.competition.ranking.domain.League
+import com.codely.competition.league.domain.LeagueName
 import java.util.UUID
 
 data class Club(
     val clubName: ClubName,
-    val league: League,
+    val leagueName: LeagueName,
     val id: UUID = UUID.randomUUID()
 )
 

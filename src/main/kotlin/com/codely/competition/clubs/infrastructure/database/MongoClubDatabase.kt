@@ -4,7 +4,7 @@ import com.codely.competition.clubs.domain.*
 import com.codely.competition.clubs.domain.ClubExistsCriteria.ByNameAndLeague
 import com.codely.competition.clubs.domain.SearchClubCriteria.All
 import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
-import com.codely.competition.ranking.domain.League
+import com.codely.competition.league.domain.LeagueName
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
@@ -23,10 +23,10 @@ data class ClubDocument(
     val name: String,
     val league: String
 ) {
-    fun toClub(): Club = Club(ClubName(name), League.valueOf(league), id = UUID.fromString(id))
+    fun toClub(): Club = Club(ClubName(name), LeagueName.valueOf(league), id = UUID.fromString(id))
 }
 
-internal fun Club.toDocument(): ClubDocument = ClubDocument(id.toString(), clubName.value, league.name)
+internal fun Club.toDocument(): ClubDocument = ClubDocument(id.toString(), clubName.value, leagueName.name)
 
 @Component
 class MongoClubDatabase(private val repository: JpaClubRepository): ClubRepository {
@@ -35,11 +35,11 @@ class MongoClubDatabase(private val repository: JpaClubRepository): ClubReposito
     override suspend fun search(criteria: SearchClubCriteria): List<Club> =
         when(criteria) {
             All -> repository.findAll()
-            is ByLeague -> repository.findAllByLeague(criteria.league.name)
+            is ByLeague -> repository.findAllByLeague(criteria.leagueName.name)
         }.map { it.toClub() }
 
     override suspend fun exists(criteria: ClubExistsCriteria): Boolean =
         when(criteria) {
-            is ByNameAndLeague -> repository.existsByNameAndLeague(criteria.clubName.value, criteria.league.name)
+            is ByNameAndLeague -> repository.existsByNameAndLeague(criteria.clubName.value, criteria.leagueName.name)
         }
 }

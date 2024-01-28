@@ -5,7 +5,7 @@ import com.codely.competition.players.domain.*
 import com.codely.competition.players.domain.FindPlayerCriteria.ByClubLeagueAndName
 import com.codely.competition.players.domain.FindPlayerCriteria.ById
 import com.codely.competition.players.domain.SearchPlayerCriteria.ByClub
-import com.codely.competition.ranking.domain.League
+import com.codely.competition.league.domain.LeagueName
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
@@ -33,7 +33,7 @@ data class PlayerDocument(
             name = name,
             clubName = ClubName(club),
             initialRanking = initialRanking,
-            initialLeague = League.valueOf(initialLeague),
+            initialLeagueName = LeagueName.valueOf(initialLeague),
             promotedToHigherLeagues = promotedToHigherLeagues
         )
 }
@@ -44,7 +44,7 @@ internal fun Player.toDocument(): PlayerDocument =
         name = name,
         club = clubName.value,
         initialRanking = initialRanking,
-        initialLeague = initialLeague.name,
+        initialLeague = initialLeagueName.name,
         promotedToHigherLeagues = promotedToHigherLeagues
     )
 
@@ -55,7 +55,7 @@ class MongoPlayerRepository(private val repository: JpaPlayerRepository): Player
     override suspend fun find(criteria: FindPlayerCriteria): Player? =
         when(criteria) {
             is ById -> repository.findByIdOrNull(criteria.id)
-            is ByClubLeagueAndName -> repository.findByClubAndInitialLeagueAndNameContaining(criteria.club.value, criteria.league.name, criteria.name)
+            is ByClubLeagueAndName -> repository.findByClubAndInitialLeagueAndNameContaining(criteria.club.value, criteria.leagueName.name, criteria.name)
         }?.toPlayer()
 
     override suspend fun search(criteria: SearchPlayerCriteria): List<Player> =

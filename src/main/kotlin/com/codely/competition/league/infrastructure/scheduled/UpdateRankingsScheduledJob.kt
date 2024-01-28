@@ -1,8 +1,8 @@
-package com.codely.competition.ranking.infrastructure.subscriber
+package com.codely.competition.league.infrastructure.scheduled
 
-import com.codely.competition.ranking.application.update.UpdateRankingCommand
-import com.codely.competition.ranking.application.update.UpdateRankingCommandHandler
-import com.codely.competition.ranking.domain.League.*
+import com.codely.competition.league.application.ranking.UpdateLeagueRankingCommand
+import com.codely.competition.league.application.ranking.UpdateRankingCommandHandler
+import com.codely.competition.league.domain.LeagueName.*
 import com.codely.shared.config.CompetitionConfig
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -41,7 +41,7 @@ class UpdateRankingsScheduledJob(
     private suspend fun processURLContent(url: URL, league: String) {
         PDDocument.load(url.openStream()).use { pdDocument ->
             val text = textStripper.getText(pdDocument).split("\n")
-            updater.handle(UpdateRankingCommand(text, league))
+            updater.handle(UpdateLeagueRankingCommand(text, league))
         }
     }
 }

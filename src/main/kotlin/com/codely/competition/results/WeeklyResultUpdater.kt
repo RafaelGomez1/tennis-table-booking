@@ -41,22 +41,6 @@ class WeeklyResultUpdater(
             .subList(leagueStandings.size + 6, splitList.size)
             .getResultsFrom(leagueStandings)
 
-        weekEndResults.forEach { key, value ->
-            Calendar(
-                id = UUID.randomUUID(),
-                name = key,
-                matches = value
-                    .map {
-                        Match(
-                            localClub = ClubName(""),
-                            visitorClub = ClubName(""),
-                            result = null,
-                            dateTime = ZonedDateTime.now()
-                        )
-                    }
-
-            )
-        }
         pdDocument.close()
     }
 

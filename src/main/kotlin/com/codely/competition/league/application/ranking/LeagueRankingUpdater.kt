@@ -1,4 +1,4 @@
-package com.codely.competition.ranking.application.update
+package com.codely.competition.league.application.ranking
 
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.clubs.domain.ClubRepository
@@ -6,36 +6,36 @@ import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
 import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
 import com.codely.competition.players.domain.FindPlayerCriteria.ByClubLeagueAndName
 import com.codely.competition.players.domain.PlayerRepository
-import com.codely.competition.ranking.domain.*
+import com.codely.competition.league.domain.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
-class RankingUpdater(
+class LeagueRankingUpdater(
     private val playerRepository: PlayerRepository,
     private val clubRepository: ClubRepository,
-    private val leagueRankingRepository: LeagueRankingRepository
+    private val leagueRepository: LeagueRepository
 ) {
     
-    suspend operator fun invoke(lines: List<String>, league: League) = coroutineScope {
+    suspend operator fun invoke(lines: List<String>, leagueName: LeagueName) = coroutineScope {
         val sanitizedList = lines
             .filter { line -> !BLACKLISTED_KEYWORDS.any { it in line } }
             .filter { line -> line.isNotBlank() }
 
-        val clubs = clubRepository.search(ByLeague(league)).map { it.clubName.value }
+        val clubs = clubRepository.search(ByLeague(leagueName)).map { it.clubName.value }
 
         val rankedPlayers = sanitizedList
-            .map { async { mapToPlayer(it, clubs, league) }.await() }
+            .map { async { mapToPlayer(it, clubs, leagueName) }.await() }
 
-        val leagueRanking = LeagueRanking.create(name = league, players = rankedPlayers)
+        val league = League.create(name = leagueName, players = rankedPlayers, standings = emptyMap())
 
-        leagueRankingRepository.delete(league)
-        leagueRankingRepository.save(leagueRanking)
+        leagueRepository.delete(leagueName)
+        leagueRepository.save(league)
     }
 
-    private suspend fun mapToPlayer(input: String, clubs: List<String>, league: League): RankedPlayer {
+    private suspend fun mapToPlayer(input: String, clubs: List<String>, leagueName: LeagueName): RankedPlayer {
         val club = clubs.first { it in input }
         val playerName = findPlayerName(input, clubs)
-        val player = playerRepository.find(ByClubLeagueAndName(ClubName(club), league, playerName))
+        val player = playerRepository.find(ByClubLeagueAndName(ClubName(club), leagueName, playerName))
         
         return player?.let {
             val gameStats = findGameStats(input)

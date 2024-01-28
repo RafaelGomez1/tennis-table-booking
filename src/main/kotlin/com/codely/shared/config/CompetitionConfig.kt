@@ -24,5 +24,6 @@ data class CompetitionConfig(
 data class Liga(
     var ranking: String = "",
     var name: String = "",
-    var players: MutableMap<String, String> = mutableMapOf()
+    var players: MutableMap<String, String> = mutableMapOf(),
+    var results: MutableMap<String, String> = mutableMapOf()
 )

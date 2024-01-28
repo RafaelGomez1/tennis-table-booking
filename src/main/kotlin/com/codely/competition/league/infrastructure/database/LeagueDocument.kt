@@ -6,17 +6,18 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.ZonedDateTime
 import java.time.ZonedDateTime.now
+import java.time.ZonedDateTime.parse
 import java.util.*
 
-@Document(collection = "Ranking")
+@Document(collection = "League")
 data class LeagueDocument(
     @Id
     val id: String,
     val name: String,
     val players: List<RankedPlayerDocument>,
     val standings: Map<String, List<LeagueStandingsDocument>>,
-    val createdOn: ZonedDateTime = now(),
-    val updatedOn: ZonedDateTime = now()
+    val createdOn: String = now().toString(),
+    val updatedOn: String = now().toString()
 ) {
     fun toLeague(): League =
         League(
@@ -24,7 +25,7 @@ data class LeagueDocument(
             name = LeagueName.valueOf(name),
             rankings = players.map { it.toRankedPlayer() },
             standings = standings.toDomain(),
-            createdOn = createdOn
+            createdOn = parse(createdOn)
         )
 }
 
@@ -99,8 +100,8 @@ internal fun League.toDocument(): LeagueDocument =
         name = name.name,
         players = rankings.map { it.toDocument() },
         standings = standings.toDocument(),
-        createdOn = createdOn,
-        updatedOn = now()
+        createdOn = createdOn.toString(),
+        updatedOn = now().toString()
     )
 
 internal fun Map<LeagueGroup, List<LeagueStandings>>.toDocument(): Map<String, List<LeagueStandingsDocument>> =

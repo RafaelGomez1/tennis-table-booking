@@ -11,4 +11,12 @@ interface LeagueRepository {
 sealed interface SearchLeagueCriteria {
     class ByNameAndClub(val leagueName: LeagueName, val clubName: ClubName): SearchLeagueCriteria
     class ByName(val leagueName: LeagueName): SearchLeagueCriteria
+
+    companion object {
+        fun from(leagueName: LeagueName, clubName: ClubName?): SearchLeagueCriteria =
+            when {
+                clubName == null -> ByName(leagueName)
+                else -> ByNameAndClub(leagueName, clubName)
+            }
+    }
 }

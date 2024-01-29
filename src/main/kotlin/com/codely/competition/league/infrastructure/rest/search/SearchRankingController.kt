@@ -23,7 +23,16 @@ class SearchRankingController(private val repository: LeagueRepository): BaseCon
     fun search(@RequestParam league: String, @RequestParam club: String): Response<*> = runBlocking {
         with(repository) {
             handle(SearchLeagueQuery(league, club.decodedParameter()))
-                ?.let { ranking -> Response.status(OK).body(ranking.toDocument()) }
+                ?.let { ranking -> Response.status(OK).body(ranking.toDTO()) }
+                ?: Response.status(NOT_FOUND).withBody(LEAGUE_RANKING_DOES_NOT_EXIST)
+        }
+    }
+
+    @GetMapping("/leagues")
+    fun searchLeagues(@RequestParam league: String, @RequestParam club: String?): Response<*> = runBlocking {
+        with(repository) {
+            handle(SearchLeagueQuery(league, club?.decodedParameter()))
+                ?.let { ranking -> Response.status(OK).body(ranking.toDTO()) }
                 ?: Response.status(NOT_FOUND).withBody(LEAGUE_RANKING_DOES_NOT_EXIST)
         }
     }

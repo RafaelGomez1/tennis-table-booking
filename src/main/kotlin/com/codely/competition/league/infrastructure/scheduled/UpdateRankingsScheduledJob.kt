@@ -22,10 +22,7 @@ class UpdateRankingsScheduledJob(
 
     private val textStripper = PDFTextStripper()
 
-//    @Scheduled(cron = "0 0 10 * * MON-TUE")
-
-//    @EventListener(ApplicationReadyEvent::class)
-    @Scheduled(cron = "50 * * * * MON-TUE")
+    @Scheduled(cron = "0 0 10 * * MON-TUE")
     fun execute() = runBlocking {
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB) = configuration
 

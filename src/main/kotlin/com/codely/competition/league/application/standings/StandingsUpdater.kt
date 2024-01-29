@@ -1,19 +1,32 @@
 package com.codely.competition.league.application.standings
 
+import com.codely.competition.clubs.domain.Club
 import com.codely.competition.clubs.domain.ClubName
+import com.codely.competition.clubs.domain.ClubRepository
+import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
 import com.codely.competition.league.domain.*
 import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
+import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
 import java.util.*
+import java.util.regex.Pattern
 
-context(LeagueRepository)
-suspend fun updateStandings(league: LeagueName, group: LeagueGroup, input: String) {
-    val league = search(ByName(league))
+context(LeagueRepository, ClubRepository)
+suspend fun updateStandings(leagueName: LeagueName, group: LeagueGroup, input: String) {
+    val league = search(ByName(leagueName))
+    val clubs = search(ByLeague(leagueName))
+
+    val sanitizedList = input
+        .split("\n")
+        .filter { line -> !BLACKLISTED_KEYWORDS.any { it in line } }
+        .filter { line -> line.isNotBlank() }
+
+    val start = sanitizedList.indexOf(STAT_HEADER)
+    val end = sanitizedList.indexOf(RESULT_HEADER)
 
     val leagueStandings =
-        input
-            .split("\n")
-            .subList(6, 18)
-            .map { it.mapToStandings() }
+        sanitizedList
+            .subList(start + 1, end)
+            .map { it.mapToStandings(clubs) }
 
     league?.updateStandings(group, leagueStandings)
         ?.let { updatedLeague -> save(updatedLeague) }
@@ -21,10 +34,16 @@ suspend fun updateStandings(league: LeagueName, group: LeagueGroup, input: Strin
     leagueStandings.map { println(it) }
 }
 
-private fun String.mapToStandings(): LeagueStandings {
+private fun String.mapToStandings(clubs: List<Club>): LeagueStandings {
     val input = this
-    val clubName = input.replace(Regex("[0-9]"), "").trim()
-    val elements = this.replace(clubName, "").trim().split(" ")
+
+    val pattern = Pattern.compile("([a-zA-Z].*[a-zA-Z])")
+    val matcher = pattern.matcher(input)
+
+    val clubName = if (matcher.find()) matcher.group(1) else ""
+
+    val actualClubName = clubs.first { it.clubName.value.contains(clubName) }.clubName.value
+    val elements = this.replace(actualClubName, "").trim().split(" ")
 
     val setsWon = elements[2].toInt()
     val gamesPlayed = elements[3].toInt()
@@ -37,7 +56,7 @@ private fun String.mapToStandings(): LeagueStandings {
 
     return LeagueStandings(
         id = UUID.randomUUID(),
-        club = ClubName(value = clubName),
+        club = ClubName(value = actualClubName),
         gamesPlayed = gamesPlayed,
         gamesWon = gamesWon,
         gamesLost = gamesLost,
@@ -59,3 +78,6 @@ private fun String.getPointsAndSets(gamesWon: Int, gamesLost: Int): Pair<Int, In
 
     return Pair(points.toInt(), setsLost.toInt())
 }
+
+private const val STAT_HEADER = "CdEEGEJ PGEquip EP PP Pts"
+private const val RESULT_HEADER = "1Jornada Acta1a volta"

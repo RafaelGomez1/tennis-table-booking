@@ -1,5 +1,6 @@
 package com.codely.competition.league.infrastructure.scheduled
 
+import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.league.application.standings.UpdateStandingsCommand
 import com.codely.competition.league.application.standings.handle
 import com.codely.competition.league.domain.LeagueRepository
@@ -15,6 +16,7 @@ import java.net.URL
 @Component
 class UpdateStandingsScheduledJob(
     private val repository: LeagueRepository,
+    private val clubRepository: ClubRepository,
     private val configuration: CompetitionConfig
 ) {
     private val textStripper = PDFTextStripper()
@@ -33,9 +35,11 @@ class UpdateStandingsScheduledJob(
 
     private suspend fun processURLContent(url: URL, league: String, group: String) {
         with(repository) {
-            PDDocument.load(url.openStream()).use { pdDocument ->
-                val text = textStripper.getText(pdDocument)
-                handle(UpdateStandingsCommand(league, group, text))
+            with(clubRepository) {
+                PDDocument.load(url.openStream()).use { pdDocument ->
+                    val text = textStripper.getText(pdDocument)
+                    handle(UpdateStandingsCommand(league, group, text))
+                }
             }
         }
     }

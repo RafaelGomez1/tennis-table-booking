@@ -1,11 +1,12 @@
 package com.codely.competition.league.application.standings
 
+import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.league.domain.LeagueGroup
 import com.codely.competition.league.domain.LeagueName
 import com.codely.competition.league.domain.LeagueRepository
 
 
-context(LeagueRepository)
+context(LeagueRepository, ClubRepository)
 suspend fun handle(query: UpdateStandingsCommand) {
     updateStandings(LeagueName.valueOf(query.league), LeagueGroup.fromString(query.group), query.input)
 }

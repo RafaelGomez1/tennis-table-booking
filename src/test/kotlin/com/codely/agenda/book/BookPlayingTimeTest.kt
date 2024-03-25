@@ -45,7 +45,7 @@ class BookPlayingTimeTest {
 
         // Then
         assertEquals(OK, result.statusCode)
-        assertTrue { repository.containsResource(expectedAgenda) }
+        repository.assertContains(expectedAgenda)
     }
 
     @Test

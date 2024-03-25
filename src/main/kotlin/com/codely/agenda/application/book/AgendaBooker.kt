@@ -1,7 +1,9 @@
 package com.codely.agenda.application.book
 
 import arrow.core.raise.Raise
+import arrow.core.raise.recover
 import com.codely.agenda.application.book.BookAgendaError.AgendaNotFound
+import com.codely.agenda.application.book.BookAgendaError.DomainError
 import com.codely.agenda.domain.Agenda
 import com.codely.agenda.domain.AgendaFindByCriteria.ById
 import com.codely.agenda.domain.AgendaRepository
@@ -14,15 +16,16 @@ context(AgendaRepository, Raise<BookAgendaError>)
 suspend fun bookAgenda(id: UUID, name: Player, hourId: UUID): Agenda {
     val agenda = findOrElse(ById(id)) { AgendaNotFound }
 
-    return agenda.bookAvailableHour(hourId, name)
-        .also { agenda -> save(agenda) }
+    val updatedAgenda =
+        recover({ agenda.bookAvailableHour(hourId, name) }, { raise(DomainError(it)) })
+
+    save(updatedAgenda)
+    return updatedAgenda
 }
 
 sealed class BookAgendaError {
     data object InvalidUUID : BookAgendaError()
     data object InvalidPlayerName : BookAgendaError()
     data object AgendaNotFound : BookAgendaError()
-    data object MaxCapacityReached : BookAgendaError()
-    data object PlayerAlreadyBooked : BookAgendaError()
-    data object AvailableHourNotFound : BookAgendaError()
+    class DomainError(val error: BookAgendaErrorDomain): BookAgendaError()
 }

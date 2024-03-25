@@ -8,17 +8,19 @@ import com.codely.admin.domain.AdminRepository
 import com.codely.admin.domain.Password
 import com.codely.admin.domain.Username
 import com.codely.shared.fakes.FakeRepository
+import java.util.*
 
-class FakeAdminRepository : AdminRepository, FakeRepository<Admin> {
-    override val elements = mutableListOf<Admin>()
+class FakeAdminRepository : AdminRepository, FakeRepository<UUID, Admin> {
+    override val elements = mutableMapOf<UUID, Admin>()
+    override val errors= mutableListOf<Throwable>()
 
-    override suspend fun save(admin: Admin) { elements.add(admin) }
+    override suspend fun save(admin: Admin) { elements.saveOrUpdate(admin, admin.id) }
 
     override suspend fun find(criteria: AdminFindByCriteria): Admin? =
         when (criteria) {
-            is ByKey -> elements.firstOrNull { it.key == criteria.accessKey }
+            is ByKey -> elements.values.firstOrNull { it.key == criteria.accessKey }
         }
 
     override suspend fun signIn(username: Username, password: Password): AccessKey? =
-        elements.firstOrNull { it.username == username && it.password == password }?.key
+        elements.values.firstOrNull { it.username == username && it.password == password }?.key
 }

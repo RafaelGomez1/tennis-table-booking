@@ -1,18 +1,14 @@
 package com.codely.agenda.domain
 
 import arrow.core.raise.Raise
-import com.codely.agenda.application.book.BookAgendaError
-import com.codely.agenda.application.book.BookAgendaError.AvailableHourNotFound
-import com.codely.agenda.application.book.BookAgendaError.MaxCapacityReached
-import com.codely.agenda.application.book.BookAgendaError.PlayerAlreadyBooked
 import com.codely.agenda.application.cancel.CancelBookingError
 import com.codely.agenda.application.cancel.CancelBookingError.PlayerNotBooked
+import com.codely.agenda.domain.BookAgendaErrorDomain.*
 import com.codely.agenda.domain.HourType.MEMBERS_TIME
 import java.time.LocalDate
 import java.time.Month
 import java.time.temporal.WeekFields
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 
 data class Agenda(
     val id: UUID,
@@ -38,7 +34,7 @@ data class Agenda(
     fun disable(): Agenda = copy(availableHours = emptyList())
     fun reenable(): Agenda = copy(availableHours = AvailableHour.fromDay(day))
 
-    context(Raise<BookAgendaError>)
+    context(Raise<BookAgendaErrorDomain>)
     fun bookAvailableHour(availableHourId: UUID, player: Player): Agenda {
         val availableHour = availableHours.find { it.id == availableHourId }
 
@@ -136,7 +132,9 @@ data class AvailableHour(
 }
 
 sealed class BookAgendaErrorDomain {
-    data object InvalidUUIDDomain : BookAgendaErrorDomain()
+    data object MaxCapacityReached : BookAgendaErrorDomain()
+    data object PlayerAlreadyBooked : BookAgendaErrorDomain()
+    data object AvailableHourNotFound : BookAgendaErrorDomain()
 }
 
 @JvmInline

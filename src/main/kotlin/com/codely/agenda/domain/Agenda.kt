@@ -1,9 +1,8 @@
 package com.codely.agenda.domain
 
 import arrow.core.raise.Raise
-import com.codely.agenda.application.cancel.CancelBookingError
-import com.codely.agenda.application.cancel.CancelBookingError.PlayerNotBooked
 import com.codely.agenda.domain.BookAgendaErrorDomain.*
+import com.codely.agenda.domain.CancelBookingErrorDomain.PlayerNotBooked
 import com.codely.agenda.domain.HourType.MEMBERS_TIME
 import java.time.LocalDate
 import java.time.Month
@@ -54,7 +53,7 @@ data class Agenda(
         } ?: raise(AvailableHourNotFound)
     }
 
-    context(Raise<CancelBookingError>)
+    context(Raise<CancelBookingErrorDomain>)
     fun cancelBooking(
         availableHourId: UUID,
         playerName: Player
@@ -72,7 +71,7 @@ data class Agenda(
                 }
 
             copy(availableHours = updatedHours)
-        } ?: raise(CancelBookingError.AvailableHourNotFound)
+        } ?: raise(CancelBookingErrorDomain.AvailableHourNotFound)
     }
 }
 
@@ -135,6 +134,11 @@ sealed class BookAgendaErrorDomain {
     data object MaxCapacityReached : BookAgendaErrorDomain()
     data object PlayerAlreadyBooked : BookAgendaErrorDomain()
     data object AvailableHourNotFound : BookAgendaErrorDomain()
+}
+
+sealed class CancelBookingErrorDomain {
+    data object PlayerNotBooked : CancelBookingErrorDomain()
+    data object AvailableHourNotFound : CancelBookingErrorDomain()
 }
 
 @JvmInline

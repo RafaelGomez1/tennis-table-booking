@@ -12,7 +12,7 @@ context(AgendaRepository, Raise<CancelBookingError>)
 suspend fun cancelBooking(id: UUID, name: Player, hourId: UUID): Agenda {
     val agenda = findOrElse(ById(id)) { AgendaNotFound }
 
-    val updatedAgenda = recover({ agenda.cancelBooking(hourId, name) }, { raise(DomainError(it)) })
+    val updatedAgenda = recover({ agenda.cancelBooking(hourId, name) }) { raise(DomainError(it)) }
 
     save(updatedAgenda)
     return updatedAgenda

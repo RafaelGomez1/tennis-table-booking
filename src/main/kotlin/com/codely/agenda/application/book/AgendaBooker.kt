@@ -17,7 +17,8 @@ suspend fun bookAgenda(id: UUID, name: Player, hourId: UUID): Agenda {
     val agenda = findOrElse(ById(id)) { AgendaNotFound }
 
     val updatedAgenda =
-        recover({ agenda.bookAvailableHour(hourId, name) }, { raise(DomainError(it)) })
+        recover({ agenda.bookAvailableHour(hourId, name) }) { raise(DomainError(it)) }
+
 
     save(updatedAgenda)
     return updatedAgenda

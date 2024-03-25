@@ -40,7 +40,7 @@ class LeagueRankingUpdater(
         
         return player?.let {
             val gameStats = findGameStats(input)
-            val ranking = input.split(" ")[0].replace(player.id.toString(), "").toInt()
+            val ranking = input.split(" ")[0].replaceFirst(player.id.toString(), "").toInt()
             RankedPlayer(it.id, it.name, it.clubName.value, gameStats, ranking)
                 .also { ranked -> println("Player found, creating ranking $ranked") }
         } ?: createRankedPlayerFromData(input, club, playerName, clubs)

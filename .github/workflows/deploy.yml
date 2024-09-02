@@ -25,6 +25,7 @@ jobs:
           ./gradlew jib --image=rafagomezp/tt-sant-andreu
           -Djib.to.auth.username=${{ secrets.DOCKERHUB_USER }}
           -Djib.to.auth.password=${{ secrets.DOCKERHUB_PWD }}
+          -Djib.from.image=amazoncorretto:21
 
   deploy_to_digital_ocean:
     runs-on: ubuntu-latest

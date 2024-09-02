@@ -2,10 +2,10 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.24"
     id("com.diffplug.spotless") version "6.18.0"
     id("com.google.cloud.tools.jib") version "3.1.4"
-    id("org.springframework.boot") version "2.7.2"
+    id("org.springframework.boot") version "3.1.5"
     id("io.spring.dependency-management") version "1.0.12.RELEASE"
     id("idea")
     kotlin("plugin.spring") version "1.9.0"
@@ -16,7 +16,7 @@ plugins {
 
 group = "com.codely"
 version = "0.0.1"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenCentral()
@@ -94,7 +94,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:1.7.8")
 
     implementation("com.diffplug.spotless:spotless-plugin-gradle:6.9.0")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-web:2.7.2")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb:2.7.2")
 
     // KotlinX
@@ -134,8 +134,8 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xcontext-receivers")
-        jvmTarget = "11"
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xcontext-receivers", "-Xmx512m", "-XX:+UseG1GC")
+        jvmTarget = "21"
     }
 }
 

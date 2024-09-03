@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.9.24"
     id("com.diffplug.spotless") version "6.18.0"
-    id("com.google.cloud.tools.jib") version "3.1.4"
+    id("com.google.cloud.tools.jib") version "3.4.3"
     id("org.springframework.boot") version "3.1.5"
     id("io.spring.dependency-management") version "1.0.12.RELEASE"
     id("idea")

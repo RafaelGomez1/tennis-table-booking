@@ -17,7 +17,8 @@ enum class LeagueName(val value: String) {
     SEGUNDA_A("2aA"),
     SEGUNDA_B("2aB"),
     TERCERA_A("3aA"),
-    TERCERA_B("3aB");
+    TERCERA_B("3aB"),
+    CUARTA("4a");
 
     companion object {
         fun parseNames(): List<String> = values().map { it.value }

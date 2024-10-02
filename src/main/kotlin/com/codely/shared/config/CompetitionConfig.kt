@@ -18,7 +18,8 @@ data class CompetitionConfig(
     val segundaA: Liga = Liga(),
     val segundaB: Liga = Liga(),
     val terceraA: Liga = Liga(),
-    val terceraB: Liga = Liga()
+    val terceraB: Liga = Liga(),
+    val cuarta: Liga = Liga()
 )
 
 data class Liga(

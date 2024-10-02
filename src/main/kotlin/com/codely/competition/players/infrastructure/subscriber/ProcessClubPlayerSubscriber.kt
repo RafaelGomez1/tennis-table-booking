@@ -19,8 +19,8 @@ class ProcessClubPlayerSubscriber(
 
 //    @EventListener(ApplicationReadyEvent::class)
     fun invoke() = runBlocking {
-        val (preferente, primera, segundaA, segundaB, terceraA, terceraB) = configuration
-        val ligas = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB)
+        val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
+        val ligas = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta)
 
         ligas.map { liga ->
             liga.players.values

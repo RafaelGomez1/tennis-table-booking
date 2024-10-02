@@ -7,12 +7,13 @@ import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
 import com.codely.competition.league.domain.*
 import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
 import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
+import java.time.ZonedDateTime
 import java.util.*
 import java.util.regex.Pattern
 
 context(LeagueRepository, ClubRepository)
 suspend fun updateStandings(leagueName: LeagueName, group: LeagueGroup, input: String) {
-    val league = search(ByName(leagueName))
+    val league = search(ByName(leagueName)) ?: League.create(id = UUID.randomUUID(), name = leagueName, players = emptyList(), standings = mapOf(), createdOn = ZonedDateTime.now())
     val clubs = search(ByLeague(leagueName))
 
     val sanitizedList = input
@@ -28,8 +29,7 @@ suspend fun updateStandings(leagueName: LeagueName, group: LeagueGroup, input: S
             .subList(start + 1, end)
             .map { it.mapToStandings(clubs) }
 
-    league?.updateStandings(group, leagueStandings)
-        ?.let { updatedLeague -> save(updatedLeague) }
+    save(league.updateStandings(group, leagueStandings))
 
     leagueStandings.map { println(it) }
 }
@@ -51,7 +51,6 @@ private fun String.mapToStandings(clubs: List<Club>): LeagueStandings {
     val gamesLost = gamesPlayed - gamesWon
     val standing = elements.first().toInt()
     val points = gamesWon * 2
-
     val (_, setsLost) = elements[1].getPointsAndSets(gamesWon, gamesLost)
 
     return LeagueStandings(
@@ -76,8 +75,13 @@ private fun String.getPointsAndSets(gamesWon: Int, gamesLost: Int): Pair<Int, In
     val pointlessInput = this.removePrefix(points)
     val setsLost = pointlessInput.removeSuffix(gamesLost.toString())
 
-    return Pair(points.toInt(), setsLost.toInt())
+    return Pair(
+        if (points.isNumeric()) points.toInt() else 0,
+        if (setsLost.isNumeric()) setsLost.toInt() else 0
+    )
 }
+
+private fun String.isNumeric() = this.matches("-?\\d+(\\.\\d+)?".toRegex())
 
 private const val STAT_HEADER = "CdEEGEJ PGEquip EP PP Pts"
 private const val RESULT_HEADER = "1Jornada Acta1a volta"

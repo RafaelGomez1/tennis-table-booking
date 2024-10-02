@@ -9,7 +9,10 @@ import com.codely.competition.players.domain.PlayerRepository
 import com.codely.competition.league.domain.*
 import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import java.time.ZonedDateTime
+import java.util.*
 
 class LeagueRankingUpdater(
     private val playerRepository: PlayerRepository,
@@ -25,12 +28,12 @@ class LeagueRankingUpdater(
         val clubs = clubRepository.search(ByLeague(leagueName)).map { it.clubName.value }
 
         val rankedPlayers = sanitizedList
-            .map { async { mapToPlayer(it, clubs, leagueName) }.await() }
+            .map { async { mapToPlayer(it, clubs, leagueName) } }
+            .awaitAll()
 
-        leagueRepository.search(ByName(leagueName))
-            ?.updateRankings(rankedPlayers)
-            ?.let { updatedLeague -> leagueRepository.save(updatedLeague) }
-            ?: Unit
+        leagueRepository.search(ByName(leagueName)) ?: League.create(id = UUID.randomUUID(), name = leagueName, players = emptyList(), standings = mapOf(), createdOn = ZonedDateTime.now())
+            .updateRankings(rankedPlayers)
+            .let { updatedLeague -> leagueRepository.save(updatedLeague) }
     }
 
     private suspend fun mapToPlayer(input: String, clubs: List<String>, leagueName: LeagueName): RankedPlayer {
@@ -59,11 +62,15 @@ class LeagueRankingUpdater(
     private fun findPlayerName(input: String, clubs: List<String>): String {
         val clubName = clubs.first { it in input }
 
-        return input
+        val splittedRow = input
             .substringAfter(clubName)
             .trim()
             .split(" ")
-            .take(2)
+
+        val indexOfNumbers = splittedRow.indexOfFirst { it.contains("-?\\d+(\\.\\d+)?".toRegex()) }
+
+        return splittedRow
+            .take(indexOfNumbers)
             .reversed()
             .joinToString { it }
             .uppercase()

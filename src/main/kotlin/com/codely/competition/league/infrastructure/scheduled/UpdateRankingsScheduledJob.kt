@@ -8,8 +8,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
-import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.net.URL
@@ -24,7 +22,7 @@ class UpdateRankingsScheduledJob(
 
     @Scheduled(cron = "0 0 10 * * MON-TUE")
     fun execute() = runBlocking {
-        val (preferente, primera, segundaA, segundaB, terceraA, terceraB) = configuration
+        val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
 
         val urls = mapOf(
             PREFERENT to URL(preferente.ranking),
@@ -32,7 +30,8 @@ class UpdateRankingsScheduledJob(
             SEGUNDA_A to URL(segundaA.ranking),
             SEGUNDA_B to URL(segundaB.ranking),
             TERCERA_A to URL(terceraA.ranking),
-            TERCERA_B to URL(terceraB.ranking)
+            TERCERA_B to URL(terceraB.ranking),
+            CUARTA to URL(cuarta.ranking)
         )
 
         urls.forEach { ( league, url) ->

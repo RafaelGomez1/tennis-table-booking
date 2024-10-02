@@ -3,6 +3,7 @@ package com.codely.competition.league.infrastructure.rest.update
 import com.codely.competition.league.application.ranking.UpdateLeagueRankingCommand
 import com.codely.competition.league.application.ranking.UpdateRankingCommandHandler
 import com.codely.competition.league.domain.LeagueName
+import com.codely.competition.league.domain.LeagueName.*
 import com.codely.shared.config.CompetitionConfig
 import com.codely.shared.response.Response
 import com.codely.shared.response.withoutBody
@@ -25,15 +26,16 @@ class UpdateRankingsController(
 
     @PostMapping("/rankings")
     fun ranking(): Response<*> = runBlocking {
-        val (preferente, primera, segundaA, segundaB, terceraA, terceraB) = configuration
+        val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
 
         val urls = mapOf(
-            LeagueName.PREFERENT to URL(preferente.ranking),
-            LeagueName.PRIMERA to URL(primera.ranking),
-            LeagueName.SEGUNDA_A to URL(segundaA.ranking),
-            LeagueName.SEGUNDA_B to URL(segundaB.ranking),
-            LeagueName.TERCERA_A to URL(terceraA.ranking),
-            LeagueName.TERCERA_B to URL(terceraB.ranking)
+            PREFERENT to URL(preferente.ranking),
+            PRIMERA to URL(primera.ranking),
+            SEGUNDA_A to URL(segundaA.ranking),
+            SEGUNDA_B to URL(segundaB.ranking),
+            TERCERA_A to URL(terceraA.ranking),
+            TERCERA_B to URL(terceraB.ranking),
+            CUARTA to URL(cuarta.ranking),
         )
 
         urls.forEach { ( league, url) ->

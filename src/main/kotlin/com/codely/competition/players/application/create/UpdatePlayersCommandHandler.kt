@@ -58,6 +58,7 @@ class UpdatePlayersCommandHandler(
 
     private fun mapToPlayer(input: String, clubName: String, leagueName: LeagueName): Player {
         return input.split(" ")
+            .filter { it.isNotBlank() }
             .let { elements ->
                 Player.create(
                     id = elements[0].toLong(),

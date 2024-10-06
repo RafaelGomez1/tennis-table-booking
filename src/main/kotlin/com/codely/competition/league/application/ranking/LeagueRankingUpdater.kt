@@ -3,11 +3,12 @@ package com.codely.competition.league.application.ranking
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
-import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
-import com.codely.competition.players.domain.FindPlayerCriteria.ByClubLeagueAndName
-import com.codely.competition.players.domain.PlayerRepository
 import com.codely.competition.league.domain.*
 import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
+import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
+import com.codely.competition.players.domain.FindPlayerCriteria.ByClubAndName
+import com.codely.competition.players.domain.FindPlayerCriteria.ByClubLeagueAndName
+import com.codely.competition.players.domain.PlayerRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -39,16 +40,25 @@ class LeagueRankingUpdater(
     private suspend fun mapToPlayer(input: String, clubs: List<String>, leagueName: LeagueName): RankedPlayer {
         val club = clubs.first { it in input }
         val playerName = findPlayerName(input, clubs)
-        val player = playerRepository.find(ByClubLeagueAndName(ClubName(club), leagueName, playerName))
+        val player = findPlayer(club, leagueName, playerName)
         
         return player?.let {
             val gameStats = findGameStats(input)
             val ranking = input.split(" ")[0].replaceFirst(player.id.toString(), "").toInt()
-            RankedPlayer(it.id, it.name, it.clubName.value, gameStats, ranking)
+            val clubName = if (club == it.clubName.value) it.clubName.value else club
+            RankedPlayer(it.id, it.name, clubName, gameStats, ranking)
                 .also { ranked -> println("Player found, creating ranking $ranked") }
         } ?: createRankedPlayerFromData(input, club, playerName, clubs)
     }
-    
+
+    private suspend fun findPlayer(
+        club: String,
+        leagueName: LeagueName,
+        playerName: String
+    ) =
+        playerRepository.find(ByClubLeagueAndName(ClubName(club), leagueName, playerName))
+            ?: playerRepository.find(ByClubAndName(ClubName(club), playerName))
+
     private fun createRankedPlayerFromData(input: String, club: String, playerName: String, clubs: List<String>): RankedPlayer {
         val updatedInput = input.formatInput(clubs)
         val elements = updatedInput.split(" ")
@@ -66,15 +76,24 @@ class LeagueRankingUpdater(
             .substringAfter(clubName)
             .trim()
             .split(" ")
+            .filter { it.isNotBlank() }
 
         val indexOfNumbers = splittedRow.indexOfFirst { it.contains("-?\\d+(\\.\\d+)?".toRegex()) }
 
-        return splittedRow
+        val playerName = splittedRow
             .take(indexOfNumbers)
             .reversed()
             .joinToString { it }
             .uppercase()
             .replace(",", "")
+
+        val parts = playerName.split(" ")
+
+        return when {
+            parts.size == 3 -> "${parts[1]} ${parts[0]} ${parts[2]}"
+            parts.size == 4 -> "${parts[0]} ${parts[3]} ${parts[2]} ${parts[1]}"
+            else -> playerName
+        }
     }
 
     private fun findGameStats(input: String): GameStats {
@@ -118,4 +137,5 @@ class LeagueRankingUpdater(
     }
 
     private val PLAYER_IDS_OVER_THOUSAND = listOf("456", "582")
+    private val COMPOUNDED_NAMES = listOf("JOSE ANTONIO", "JOSE MIGUEL", "MIGUEL ANGEL", "FRANCISCO JAVIER", "JOSEP MARIA", "NICHOLAS MANUEL")
 }

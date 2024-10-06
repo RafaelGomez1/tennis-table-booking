@@ -18,6 +18,7 @@ sealed interface ExistsPlayerCriteria {
 sealed interface FindPlayerCriteria {
     class ById(val id: Long): FindPlayerCriteria
     class ByClubLeagueAndName(val club: ClubName, val leagueName: LeagueName, val name: String): FindPlayerCriteria
+    class ByClubAndName(val club: ClubName, val name: String): FindPlayerCriteria
 }
 
 sealed interface SearchPlayerCriteria {

@@ -27,8 +27,8 @@ class UpdateStandingsController(
 
     @PostMapping("/standings")
     fun ranking(): Response<*> = runBlocking {
-        val (preferente, primera, segundaA, segundaB, terceraA, terceraB) = configuration
-        val standings = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB)
+        val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
+        val standings = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta)
 
         standings.map { liga ->
             liga.results.forEach { group, url ->

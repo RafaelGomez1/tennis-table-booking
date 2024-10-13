@@ -32,9 +32,9 @@ class LeagueRankingUpdater(
             .map { async { mapToPlayer(it, clubs, leagueName) } }
             .awaitAll()
 
-        leagueRepository.search(ByName(leagueName)) ?: League.create(id = UUID.randomUUID(), name = leagueName, players = emptyList(), standings = mapOf(), createdOn = ZonedDateTime.now())
-            .updateRankings(rankedPlayers)
-            .let { updatedLeague -> leagueRepository.save(updatedLeague) }
+        val league = leagueRepository.search(ByName(leagueName)) ?: League.create(id = UUID.randomUUID(), name = leagueName, players = emptyList(), standings = mapOf(), createdOn = ZonedDateTime.now())
+        val updatedLeague = league.updateRankings(rankedPlayers)
+        leagueRepository.save(updatedLeague)
     }
 
     private suspend fun mapToPlayer(input: String, clubs: List<String>, leagueName: LeagueName): RankedPlayer {

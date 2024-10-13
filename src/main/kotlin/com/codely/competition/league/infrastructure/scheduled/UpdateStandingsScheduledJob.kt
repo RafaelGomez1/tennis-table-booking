@@ -9,8 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
-import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.net.URL
@@ -30,6 +28,7 @@ class UpdateStandingsScheduledJob(
 
         standings.map { liga ->
             liga.results.forEach { group, url ->
+                println("Starting ranking updating for ${liga.name}")
                 launch { processURLContent(URL(url), liga.name, group) }
             }
         }

@@ -10,14 +10,13 @@ import com.codely.shared.response.withoutBody
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.text.PDFTextStripper
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.ACCEPTED
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URL
 
 @RestController
-class UpdateStandingsController(
+class UpdateLeagueStandingsController(
     private val repository: LeagueRepository,
     private val clubRepository: ClubRepository,
     private val configuration: CompetitionConfig

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod
     allowCredentials = "true",
     originPatterns = ["*"],
     allowedHeaders = ["*"],
-    origins = ["*"],
     methods = [
         RequestMethod.POST,
         RequestMethod.OPTIONS,

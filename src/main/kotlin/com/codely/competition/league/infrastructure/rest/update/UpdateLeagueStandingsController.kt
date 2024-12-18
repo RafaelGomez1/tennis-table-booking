@@ -1,5 +1,6 @@
 package com.codely.competition.league.infrastructure.rest.update
 
+import com.codely.competition.calendar.domain.ClubCalendarRepository
 import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.league.application.standings.UpdateStandingsCommand
 import com.codely.competition.league.application.standings.handle
@@ -19,7 +20,8 @@ import java.net.URL
 class UpdateLeagueStandingsController(
     private val repository: LeagueRepository,
     private val clubRepository: ClubRepository,
-    private val configuration: CompetitionConfig
+    private val configuration: CompetitionConfig,
+    private val calendarRepository: ClubCalendarRepository
 ) {
 
     private val textStripper = PDFTextStripper()
@@ -41,9 +43,11 @@ class UpdateLeagueStandingsController(
     private suspend fun processURLContent(url: URL, league: String, group: String) {
         with(repository) {
             with(clubRepository) {
-                org.apache.pdfbox.pdmodel.PDDocument.load(url.openStream()).use { pdDocument ->
-                    val text = textStripper.getText(pdDocument)
-                    handle(UpdateStandingsCommand(league, group, text))
+                with(calendarRepository) {
+                    org.apache.pdfbox.pdmodel.PDDocument.load(url.openStream()).use { pdDocument ->
+                        val text = textStripper.getText(pdDocument)
+                        handle(UpdateStandingsCommand(league, group, text))
+                    }
                 }
             }
         }

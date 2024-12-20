@@ -26,7 +26,7 @@ class UpdateLeagueStandingsController(
 
     private val textStripper = PDFTextStripper()
 
-    @PostMapping("/standings")
+    @PostMapping("/api/standings")
     fun ranking(): Response<*> = runBlocking {
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
         val standings = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta)

@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class CancelBookingController(private val repository: AgendaRepository) : BaseController() {
 
-    @PatchMapping("/agendas/{agendaId}/hours/{hourId}")
+    @PatchMapping("/api/agendas/{agendaId}/hours/{hourId}")
     fun cancel(@PathVariable agendaId: String, @PathVariable hourId: String, @RequestBody body: CancelBookingDTO): Response<*> = runBlocking {
         with(repository) {
             fold(

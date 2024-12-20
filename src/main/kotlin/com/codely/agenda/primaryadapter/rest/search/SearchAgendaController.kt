@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SearchAgendaController(private val repository: AgendaRepository) : BaseController() {
 
-    @GetMapping("/agendas")
+    @GetMapping("/api/agendas")
     fun search(@RequestParam week: Int, @RequestParam year: Int): Response<*> = runBlocking {
         with(repository) {
             handle(SearchAgendasQuery(week, year))

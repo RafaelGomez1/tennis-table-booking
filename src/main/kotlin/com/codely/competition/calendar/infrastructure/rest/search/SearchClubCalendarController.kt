@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SearchClubCalendarController(private val repository: ClubCalendarRepository): BaseController() {
 
-    @GetMapping("/club-calendar")
+    @GetMapping("/api/club-calendar")
     fun search(@RequestParam league: String, @RequestParam club: String): Response<*> = runBlocking {
         with(repository) {
             handle(SearchClubCalendarQuery(league = league, club = club))

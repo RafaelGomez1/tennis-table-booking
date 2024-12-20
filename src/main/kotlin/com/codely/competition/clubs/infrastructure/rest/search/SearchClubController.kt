@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SearchClubController(private val repository: ClubRepository): BaseController() {
 
-    @GetMapping("/clubs")
+    @GetMapping("/api/clubs")
     fun search(@RequestParam league: String): Response<*> = runBlocking {
         with(repository) {
             handle(SearchClubQuery(league))

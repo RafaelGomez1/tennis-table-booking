@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 @RestController
 class SearchRankingController(private val repository: LeagueRepository): BaseController() {
 
-    @GetMapping("/rankings")
+    @GetMapping("/api/rankings")
     fun search(@RequestParam league: String, @RequestParam club: String): Response<*> = runBlocking {
         with(repository) {
             handle(SearchLeagueQuery(league, club.decodedParameter()))
@@ -28,7 +28,7 @@ class SearchRankingController(private val repository: LeagueRepository): BaseCon
         }
     }
 
-    @GetMapping("/leagues")
+    @GetMapping("/api/leagues")
     fun searchLeagues(@RequestParam league: String, @RequestParam club: String?): Response<*> = runBlocking {
         with(repository) {
             handle(SearchLeagueQuery(league, club?.decodedParameter()))

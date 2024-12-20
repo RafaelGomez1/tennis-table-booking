@@ -32,7 +32,7 @@ class ReenableAgendaController(
     private val adminRepository: AdminRepository
 ) : BaseController() {
 
-    @PatchMapping("/agendas/{agendaId}/reenable")
+    @PatchMapping("/api/agendas/{agendaId}/reenable")
     fun reenableAgenda(@PathVariable agendaId: String, @RequestParam accessKey: String): Response<*> = runBlocking {
         with(repository) {
             with(adminRepository) {

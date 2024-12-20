@@ -32,7 +32,7 @@ class DisableAgendaController(
     private val adminRepository: AdminRepository
 ) : BaseController() {
 
-    @PatchMapping("/agendas/{agendaId}/disable")
+    @PatchMapping("/api/agendas/{agendaId}/disable")
     fun disableAgenda(@PathVariable agendaId: String, @RequestParam accessKey: String): Response<*> = runBlocking {
         with(repository) {
             with(adminRepository) {

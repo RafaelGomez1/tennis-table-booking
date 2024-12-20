@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SetupAgendaController(private val repository: AgendaRepository) {
 
-    @PostMapping("/agenda/setUp/{year}")
+    @PostMapping("/api/agenda/setUp/{year}")
     fun setUp(@PathVariable year: String): ResponseEntity<*> = runBlocking {
       with(repository) {
           fold(

@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class BookAgendaController(private val repository: AgendaRepository) : BaseController() {
 
-    @PostMapping("/agendas/{agendaId}/hours/{hourId}")
+    @PostMapping("/api/agendas/{agendaId}/hours/{hourId}")
     fun bookAgenda(@PathVariable agendaId: String, @PathVariable hourId: String, @RequestBody body: BookAgendaDTO): Response<*> = runBlocking {
         with(repository) {
             fold(

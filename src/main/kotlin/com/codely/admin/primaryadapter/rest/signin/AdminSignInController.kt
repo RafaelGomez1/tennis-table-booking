@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class AdminSignInController(private val repository: AdminRepository) : BaseController() {
 
-    @PostMapping("/admins/sign-in", headers = ["Authorization"])
+    @PostMapping("/api/admins/sign-in", headers = ["Authorization"])
     fun signIn(@RequestHeader("Authorization") authHeader: String): Response<*> = runBlocking {
         with(repository) {
             val (username, password) = extractCredentials(authHeader)

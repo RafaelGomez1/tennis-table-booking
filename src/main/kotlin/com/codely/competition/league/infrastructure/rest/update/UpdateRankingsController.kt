@@ -24,7 +24,7 @@ class UpdateRankingsController(
 
     private val textStripper = PDFTextStripper()
 
-    @PostMapping("/rankings")
+    @PostMapping("/api/rankings")
     fun ranking(): Response<*> = runBlocking {
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
 

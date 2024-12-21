@@ -15,7 +15,7 @@ context(AgendaRepository, Raise<ConfigureAgendaError>)
 suspend fun configureAgenda(year: Year) {
 
     val currentDate = LocalDate.of(2025, 1, 1)
-    val endDate = LocalDate.of(year, 12, 32)
+    val endDate = LocalDate.of(year, 12, 31)
     logger.info { "Starting agenda set up action until $endDate" }
 
     currentDate.datesUntil(endDate)

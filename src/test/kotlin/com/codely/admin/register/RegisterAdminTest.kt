@@ -8,12 +8,15 @@ import com.codely.admin.primaryadapter.rest.error.AdminServerErrors.INVALID_IDEN
 import com.codely.admin.primaryadapter.rest.register.RegisterAdminController
 import com.codely.admin.primaryadapter.rest.register.RegisterAdminDTO
 import com.codely.shared.error.ServerError
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.CREATED
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class RegisterAdminTest {
 
     private val repository = FakeAdminRepository()
@@ -28,7 +31,7 @@ class RegisterAdminTest {
     }
 
     @Test
-    fun `should register admin`() {
+    fun `should register admin`() = runTest {
         // Given
         accessKeyGenerator.generateKey(admin.key)
 
@@ -40,7 +43,7 @@ class RegisterAdminTest {
     }
 
     @Test
-    fun `should fail admin registration if identifier is not UUID`() {
+    fun `should fail admin registration if identifier is not UUID`() = runTest {
         // When
         val result = controller.register("122234", requestBody)
 

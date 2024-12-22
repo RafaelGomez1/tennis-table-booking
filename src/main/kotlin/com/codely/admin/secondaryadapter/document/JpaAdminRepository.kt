@@ -1,10 +1,10 @@
 package com.codely.admin.secondaryadapter.document
 
-import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface JpaAdminRepository : MongoRepository<AdminDocument, String> {
-    fun findByUsername(username: String): AdminDocument
-    fun findByAccessKey(accessKey: String): AdminDocument?
+interface JpaAdminRepository : CoroutineCrudRepository<AdminDocument, String> {
+    suspend fun findByUsername(username: String): AdminDocument?
+    suspend fun findByAccessKey(accessKey: String): AdminDocument?
 }

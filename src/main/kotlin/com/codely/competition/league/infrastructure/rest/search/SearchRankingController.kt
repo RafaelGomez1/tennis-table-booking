@@ -7,7 +7,7 @@ import com.codely.competition.league.infrastructure.rest.error.LeagueRankingServ
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.coroutineScope
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.HttpStatus.OK
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 class SearchRankingController(private val repository: LeagueRepository): BaseController() {
 
     @GetMapping("/api/rankings")
-    fun search(@RequestParam league: String, @RequestParam club: String): Response<*> = runBlocking {
+    suspend fun search(@RequestParam league: String, @RequestParam club: String): Response<*> = coroutineScope {
         with(repository) {
             handle(SearchLeagueQuery(league, club.decodedParameter()))
                 ?.let { ranking -> Response.status(OK).body(ranking.toDTO()) }
@@ -29,7 +29,7 @@ class SearchRankingController(private val repository: LeagueRepository): BaseCon
     }
 
     @GetMapping("/api/leagues")
-    fun searchLeagues(@RequestParam league: String, @RequestParam club: String?): Response<*> = runBlocking {
+    suspend fun searchLeagues(@RequestParam league: String, @RequestParam club: String?): Response<*> = coroutineScope {
         with(repository) {
             handle(SearchLeagueQuery(league, club?.decodedParameter()))
                 ?.let { ranking -> Response.status(OK).body(ranking.toDTO()) }

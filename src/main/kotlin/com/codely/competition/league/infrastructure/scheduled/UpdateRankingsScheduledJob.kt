@@ -41,9 +41,11 @@ class UpdateRankingsScheduledJob(
     }
 
     private suspend fun processURLContent(url: URL, league: String) {
-        PDDocument.load(url.openStream()).use { pdDocument ->
-            val text = textStripper.getText(pdDocument).split("\n")
-            updater.handle(UpdateLeagueRankingCommand(text, league))
+        url.openStream().use { stream ->
+            PDDocument.load(stream).use { pdDocument ->
+                val text = textStripper.getText(pdDocument).split("\n")
+                updater.handle(UpdateLeagueRankingCommand(text, league))
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import com.codely.agenda.application.setup.ConfigureAgendaError.Unknown
 import com.codely.agenda.application.setup.SetUpAgendaCommand
 import com.codely.agenda.application.setup.handle
 import com.codely.agenda.domain.AgendaRepository
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -17,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController
 class SetupAgendaController(private val repository: AgendaRepository) {
 
     @PostMapping("/api/agenda/setUp/{year}")
-    fun setUp(@PathVariable year: String): ResponseEntity<*> = runBlocking {
-      with(repository) {
-          fold(
-              block = { handle(SetUpAgendaCommand(year.toInt())) },
-              recover = { error -> error.toServerError() },
-              transform = { ResponseEntity.status(HttpStatus.ACCEPTED).body(null) }
-          )
-      }
+    suspend fun setUp(@PathVariable year: String): ResponseEntity<*> = coroutineScope {
+        with(repository) {
+            fold(
+                block = { handle(SetUpAgendaCommand(year.toInt())) },
+                recover = { error -> error.toServerError() },
+                transform = { ResponseEntity.status(HttpStatus.ACCEPTED).body(null) }
+            )
+        }
     }
 
     private fun ConfigureAgendaError.toServerError(): ResponseEntity<*> =

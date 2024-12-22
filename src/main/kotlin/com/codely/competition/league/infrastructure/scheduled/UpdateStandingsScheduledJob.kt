@@ -40,9 +40,11 @@ class UpdateStandingsScheduledJob(
         with(repository) {
             with(clubRepository) {
                 with(calendarRepository) {
-                    PDDocument.load(url.openStream()).use { pdDocument ->
-                        val text = textStripper.getText(pdDocument)
-                        handle(UpdateStandingsCommand(league, group, text))
+                    url.openStream().use { stream ->
+                        PDDocument.load(stream).use { pdDocument ->
+                            val text = textStripper.getText(pdDocument)
+                            handle(UpdateStandingsCommand(league, group, text))
+                        }
                     }
                 }
             }

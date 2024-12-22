@@ -1,22 +1,20 @@
 package com.codely.competition.players.infrastructure.database
 
 import com.codely.competition.clubs.domain.ClubName
-import com.codely.competition.players.domain.*
-import com.codely.competition.players.domain.SearchPlayerCriteria.ByClub
 import com.codely.competition.league.domain.LeagueName
+import com.codely.competition.players.domain.*
 import com.codely.competition.players.domain.FindPlayerCriteria.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.codely.competition.players.domain.SearchPlayerCriteria.ByClub
+import com.codely.shared.dispatcher.withIOContext
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.repository.MongoRepository
-import org.springframework.data.repository.findByIdOrNull
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Component
 
-interface JpaPlayerRepository : MongoRepository<PlayerDocument, Long> {
-    fun findAllByClub(club: String): List<PlayerDocument>
-    fun findByClubContainingIgnoreCaseAndInitialLeagueAndNameContaining(club: String, initialLeague: String, name: String): PlayerDocument?
-    fun findByClubContainingIgnoreCaseAndNameContaining(club: String, name: String): PlayerDocument?
+interface JpaPlayerRepository : CoroutineCrudRepository<PlayerDocument, Long> {
+    suspend fun findAllByClub(club: String): List<PlayerDocument>
+    suspend fun findByClubContainingIgnoreCaseAndInitialLeagueAndNameContaining(club: String, initialLeague: String, name: String): PlayerDocument?
+    suspend fun findByClubContainingIgnoreCaseAndNameContaining(club: String, name: String): PlayerDocument?
 }
 
 @Document(collection = "Players")
@@ -55,9 +53,9 @@ class MongoPlayerRepository(private val repository: JpaPlayerRepository): Player
     override suspend fun save(player: Player) { repository.save(player.toDocument()) }
 
     override suspend fun find(criteria: FindPlayerCriteria): Player? =
-        withContext(Dispatchers.IO) {
+        withIOContext {
             when (criteria) {
-                is ById -> repository.findByIdOrNull(criteria.id)
+                is ById -> repository.findById(criteria.id)
                 is ByClubLeagueAndName ->
                     repository.findByClubContainingIgnoreCaseAndInitialLeagueAndNameContaining(
                         club = criteria.club.value,
@@ -69,14 +67,14 @@ class MongoPlayerRepository(private val repository: JpaPlayerRepository): Player
         }
 
     override suspend fun search(criteria: SearchPlayerCriteria): List<Player> =
-        withContext(Dispatchers.IO) {
+        withIOContext {
             when (criteria) {
                 is ByClub -> repository.findAllByClub(criteria.club.value)
             }.map { it.toPlayer() }
         }
 
     override suspend fun exists(criteria: ExistsPlayerCriteria): Boolean =
-        withContext(Dispatchers.IO) {
+        withIOContext {
             when (criteria) {
                 is ExistsPlayerCriteria.ById -> repository.existsById(criteria.id)
             }

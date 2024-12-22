@@ -94,8 +94,16 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:1.7.8")
 
     implementation("com.diffplug.spotless:spotless-plugin-gradle:6.9.0")
-    implementation("org.springframework.boot:spring-boot-starter-web:2.7.2")
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb:2.7.2")
+
+    // Reactive spring boot
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
 
     // KotlinX
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")

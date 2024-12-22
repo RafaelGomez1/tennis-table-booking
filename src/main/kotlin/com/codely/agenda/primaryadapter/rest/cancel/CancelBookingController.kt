@@ -17,6 +17,7 @@ import com.codely.agenda.primaryadapter.rest.error.AgendaServerErrors.USER_NOT_B
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.PatchMapping
@@ -28,7 +29,11 @@ import org.springframework.web.bind.annotation.RestController
 class CancelBookingController(private val repository: AgendaRepository) : BaseController() {
 
     @PatchMapping("/api/agendas/{agendaId}/hours/{hourId}")
-    fun cancel(@PathVariable agendaId: String, @PathVariable hourId: String, @RequestBody body: CancelBookingDTO): Response<*> = runBlocking {
+    suspend fun cancel(
+        @PathVariable agendaId: String,
+        @PathVariable hourId: String,
+        @RequestBody body: CancelBookingDTO
+    ): Response<*> = coroutineScope {
         with(repository) {
             fold(
                 block = { handle(CancelBookingCommand(id = agendaId, hourId = hourId, playerName = body.playerName)) },

@@ -7,6 +7,7 @@ import com.codely.competition.league.domain.LeagueName.*
 import com.codely.shared.config.CompetitionConfig
 import com.codely.shared.response.Response
 import com.codely.shared.response.withoutBody
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -25,7 +26,7 @@ class UpdateRankingsController(
     private val textStripper = PDFTextStripper()
 
     @PostMapping("/api/rankings")
-    fun ranking(): Response<*> = runBlocking {
+    suspend fun ranking(): Response<*> = coroutineScope {
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
 
         val urls = mapOf(

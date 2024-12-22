@@ -17,7 +17,7 @@ import com.codely.agenda.primaryadapter.rest.error.AgendaServerErrors.USER_ALREA
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.coroutineScope
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController
 class BookAgendaController(private val repository: AgendaRepository) : BaseController() {
 
     @PostMapping("/api/agendas/{agendaId}/hours/{hourId}")
-    fun bookAgenda(@PathVariable agendaId: String, @PathVariable hourId: String, @RequestBody body: BookAgendaDTO): Response<*> = runBlocking {
+    suspend fun bookAgenda(@PathVariable agendaId: String, @PathVariable hourId: String, @RequestBody body: BookAgendaDTO): Response<*> = coroutineScope {
         with(repository) {
             fold(
                 block = { handle(BookAgendaCommand(id = agendaId, hourId = hourId, playerName = body.playerName)) },

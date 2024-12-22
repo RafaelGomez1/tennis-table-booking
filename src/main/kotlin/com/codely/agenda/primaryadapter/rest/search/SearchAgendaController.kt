@@ -6,7 +6,6 @@ import com.codely.agenda.domain.AgendaRepository
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 import org.springframework.http.HttpStatus.OK
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam

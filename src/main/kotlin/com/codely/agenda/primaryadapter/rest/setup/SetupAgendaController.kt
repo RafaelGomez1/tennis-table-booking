@@ -7,7 +7,6 @@ import com.codely.agenda.application.setup.SetUpAgendaCommand
 import com.codely.agenda.application.setup.handle
 import com.codely.agenda.domain.AgendaRepository
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable

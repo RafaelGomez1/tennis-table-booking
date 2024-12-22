@@ -1,13 +1,16 @@
 package com.codely.agenda.domain
 
 import arrow.core.raise.Raise
-import com.codely.agenda.domain.BookAgendaErrorDomain.*
+import com.codely.agenda.domain.BookAgendaErrorDomain.AvailableHourNotFound
+import com.codely.agenda.domain.BookAgendaErrorDomain.MaxCapacityReached
+import com.codely.agenda.domain.BookAgendaErrorDomain.PlayerAlreadyBooked
 import com.codely.agenda.domain.CancelBookingErrorDomain.PlayerNotBooked
 import com.codely.agenda.domain.HourType.MEMBERS_TIME
 import java.time.LocalDate
 import java.time.Month
 import java.time.temporal.WeekFields
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 data class Agenda(
     val id: UUID,

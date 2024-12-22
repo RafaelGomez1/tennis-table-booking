@@ -11,7 +11,7 @@ import java.util.*
 
 class FakeAgendaRepository : AgendaRepository, FakeRepository<UUID, Agenda> {
     override val elements = mutableMapOf<UUID, Agenda>()
-    override val errors= mutableListOf<Throwable>()
+    override val errors = mutableListOf<Throwable>()
 
     override suspend fun save(agenda: Agenda) { elements.saveOrUpdate(agenda, agenda.id) }
 

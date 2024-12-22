@@ -12,7 +12,7 @@ import java.util.*
 
 class FakeAdminRepository : AdminRepository, FakeRepository<UUID, Admin> {
     override val elements = mutableMapOf<UUID, Admin>()
-    override val errors= mutableListOf<Throwable>()
+    override val errors = mutableListOf<Throwable>()
 
     override suspend fun save(admin: Admin) { elements.saveOrUpdate(admin, admin.id) }
 

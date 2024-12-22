@@ -1,11 +1,13 @@
 package com.codely.competition.league.infrastructure.database
 
 import com.codely.competition.clubs.domain.ClubName
-import com.codely.competition.league.domain.*
+import com.codely.competition.league.domain.League
+import com.codely.competition.league.domain.LeagueName
+import com.codely.competition.league.domain.LeagueRepository
+import com.codely.competition.league.domain.SearchLeagueCriteria
 import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
 import com.codely.competition.league.domain.SearchLeagueCriteria.ByNameAndClub
 import com.codely.shared.dispatcher.withIOContext
-import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Component
 
@@ -15,7 +17,7 @@ interface JpaLeagueRepository : CoroutineCrudRepository<LeagueDocument, String> 
 }
 
 @Component
-class MongoLeagueRepository(private val repository: JpaLeagueRepository): LeagueRepository {
+class MongoLeagueRepository(private val repository: JpaLeagueRepository) : LeagueRepository {
     override suspend fun save(league: League) {
         withIOContext {
             repository.save(league.toDocument())

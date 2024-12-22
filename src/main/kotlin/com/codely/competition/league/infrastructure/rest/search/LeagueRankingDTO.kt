@@ -1,6 +1,10 @@
 package com.codely.competition.league.infrastructure.rest.search
 
-import com.codely.competition.league.domain.*
+import com.codely.competition.league.domain.GameStats
+import com.codely.competition.league.domain.League
+import com.codely.competition.league.domain.LeagueGroup
+import com.codely.competition.league.domain.LeagueStandings
+import com.codely.competition.league.domain.RankedPlayer
 
 data class LeagueRankingDTO(
     val id: String,
@@ -67,4 +71,3 @@ internal fun League.toDTO(): LeagueRankingDTO =
         players = rankings.map { it.toDTO() },
         standings = standings.toDTO()
     )
-

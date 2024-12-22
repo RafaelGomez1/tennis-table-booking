@@ -17,7 +17,7 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets.UTF_8
 
 @RestController
-class SearchRankingController(private val repository: LeagueRepository): BaseController() {
+class SearchRankingController(private val repository: LeagueRepository) : BaseController() {
 
     @GetMapping("/api/rankings")
     suspend fun search(@RequestParam league: String, @RequestParam club: String): Response<*> = coroutineScope {

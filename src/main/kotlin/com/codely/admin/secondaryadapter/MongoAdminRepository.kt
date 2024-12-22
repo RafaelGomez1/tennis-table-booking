@@ -1,6 +1,11 @@
 package com.codely.admin.secondaryadapter
 
-import com.codely.admin.domain.*
+import com.codely.admin.domain.AdminRepository
+import com.codely.admin.domain.Admin
+import com.codely.admin.domain.AdminFindByCriteria
+import com.codely.admin.domain.Username
+import com.codely.admin.domain.AccessKey
+import com.codely.admin.domain.Password
 import com.codely.admin.domain.AdminFindByCriteria.ByKey
 import com.codely.admin.secondaryadapter.document.JpaAdminRepository
 import com.codely.admin.secondaryadapter.document.toDocument

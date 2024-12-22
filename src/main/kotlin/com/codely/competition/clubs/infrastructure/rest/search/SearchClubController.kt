@@ -7,14 +7,13 @@ import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class SearchClubController(private val repository: ClubRepository): BaseController() {
+class SearchClubController(private val repository: ClubRepository) : BaseController() {
 
     @GetMapping("/api/clubs")
     suspend fun search(@RequestParam league: String): Response<*> = coroutineScope {

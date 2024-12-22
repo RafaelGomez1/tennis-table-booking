@@ -9,7 +9,7 @@ import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Component
 
 @Component
-class DatabaseClubCalendarRepository(private val repository: JpaClubCalendarRepository): ClubCalendarRepository {
+class DatabaseClubCalendarRepository(private val repository: JpaClubCalendarRepository) : ClubCalendarRepository {
     override suspend fun save(calendar: ClubCalendar) {
         withIOContext {
             repository.save(calendar.toDocument())
@@ -18,7 +18,7 @@ class DatabaseClubCalendarRepository(private val repository: JpaClubCalendarRepo
 
     override suspend fun search(criteria: SearchClubCalendarCriteria): ClubCalendar? =
         withIOContext {
-            when(criteria) {
+            when (criteria) {
                 is ByNameAndLeague ->
                     repository.findByClubNameAndLeague(criteria.clubName.value, criteria.leagueName.name)
             }?.toDomain()

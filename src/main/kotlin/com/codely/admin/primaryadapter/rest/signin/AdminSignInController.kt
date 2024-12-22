@@ -13,7 +13,6 @@ import com.codely.shared.response.withBody
 import kotlinx.coroutines.coroutineScope
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
-import kotlinx.coroutines.runBlocking
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.OK
 import org.springframework.web.bind.annotation.PostMapping

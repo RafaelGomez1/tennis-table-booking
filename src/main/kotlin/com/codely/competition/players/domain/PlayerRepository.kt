@@ -12,15 +12,15 @@ interface PlayerRepository {
 }
 
 sealed interface ExistsPlayerCriteria {
-    class ById(val id: Long): ExistsPlayerCriteria
+    class ById(val id: Long) : ExistsPlayerCriteria
 }
 
 sealed interface FindPlayerCriteria {
-    class ById(val id: Long): FindPlayerCriteria
-    class ByClubLeagueAndName(val club: ClubName, val leagueName: LeagueName, val name: String): FindPlayerCriteria
-    class ByClubAndName(val club: ClubName, val name: String): FindPlayerCriteria
+    class ById(val id: Long) : FindPlayerCriteria
+    class ByClubLeagueAndName(val club: ClubName, val leagueName: LeagueName, val name: String) : FindPlayerCriteria
+    class ByClubAndName(val club: ClubName, val name: String) : FindPlayerCriteria
 }
 
 sealed interface SearchPlayerCriteria {
-    class ByClub(val club: ClubName): SearchPlayerCriteria
+    class ByClub(val club: ClubName) : SearchPlayerCriteria
 }

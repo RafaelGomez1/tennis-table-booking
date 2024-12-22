@@ -33,5 +33,4 @@ class MongoAgendaRepository(private val repository: JpaAgendaRepository) : Agend
                 is ById -> repository.findById(criteria.id.toString())
             }?.toAgenda()
         }
-
 }

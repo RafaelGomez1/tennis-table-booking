@@ -2,7 +2,13 @@ package com.codely.competition.league.infrastructure.scheduled
 
 import com.codely.competition.league.application.ranking.UpdateLeagueRankingCommand
 import com.codely.competition.league.application.ranking.UpdateRankingCommandHandler
-import com.codely.competition.league.domain.LeagueName.*
+import com.codely.competition.league.domain.LeagueName.CUARTA
+import com.codely.competition.league.domain.LeagueName.PREFERENT
+import com.codely.competition.league.domain.LeagueName.PRIMERA
+import com.codely.competition.league.domain.LeagueName.SEGUNDA_A
+import com.codely.competition.league.domain.LeagueName.SEGUNDA_B
+import com.codely.competition.league.domain.LeagueName.TERCERA_A
+import com.codely.competition.league.domain.LeagueName.TERCERA_B
 import com.codely.shared.config.CompetitionConfig
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -34,7 +40,7 @@ class UpdateRankingsScheduledJob(
             CUARTA to URL(cuarta.ranking)
         )
 
-        urls.forEach { ( league, url) ->
+        urls.forEach { (league, url) ->
             println("Starting ranking updating for ${league.name}")
             launch { processURLContent(url, league.name) }.join()
         }

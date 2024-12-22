@@ -1,6 +1,10 @@
 package com.codely.competition.clubs.infrastructure.database
 
-import com.codely.competition.clubs.domain.*
+import com.codely.competition.clubs.domain.SearchClubCriteria
+import com.codely.competition.clubs.domain.ClubExistsCriteria
+import com.codely.competition.clubs.domain.Club
+import com.codely.competition.clubs.domain.ClubName
+import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.clubs.domain.ClubExistsCriteria.ByNameAndLeague
 import com.codely.competition.clubs.domain.SearchClubCriteria.All
 import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
@@ -11,7 +15,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 interface JpaClubRepository : CoroutineCrudRepository<ClubDocument, String> {
     suspend fun existsByNameAndLeague(name: String, league: String): Boolean
@@ -31,7 +35,7 @@ data class ClubDocument(
 internal fun Club.toDocument(): ClubDocument = ClubDocument(id.toString(), clubName.value, leagueName.name)
 
 @Component
-class MongoClubDatabase(private val repository: JpaClubRepository): ClubRepository {
+class MongoClubDatabase(private val repository: JpaClubRepository) : ClubRepository {
 
     override suspend fun save(club: Club) {
         withIOContext {

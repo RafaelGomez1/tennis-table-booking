@@ -8,5 +8,4 @@ context(ClubRepository)
 suspend fun handle(query: SearchClubQuery): List<Club> =
     searchClub(leagueName = LeagueName.valueOf(query.league))
 
-
 data class SearchClubQuery(val league: String)

@@ -8,10 +8,8 @@ import com.codely.competition.league.domain.LeagueRepository
 import com.codely.shared.config.CompetitionConfig
 import com.codely.shared.response.Response
 import com.codely.shared.response.withoutBody
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.text.PDFTextStripper
 import org.springframework.http.HttpStatus.ACCEPTED
 import org.springframework.web.bind.annotation.PostMapping

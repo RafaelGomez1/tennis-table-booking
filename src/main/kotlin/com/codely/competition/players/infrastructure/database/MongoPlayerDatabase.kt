@@ -2,8 +2,14 @@ package com.codely.competition.players.infrastructure.database
 
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.league.domain.LeagueName
-import com.codely.competition.players.domain.*
-import com.codely.competition.players.domain.FindPlayerCriteria.*
+import com.codely.competition.players.domain.ExistsPlayerCriteria
+import com.codely.competition.players.domain.FindPlayerCriteria
+import com.codely.competition.players.domain.FindPlayerCriteria.ByClubAndName
+import com.codely.competition.players.domain.FindPlayerCriteria.ByClubLeagueAndName
+import com.codely.competition.players.domain.FindPlayerCriteria.ById
+import com.codely.competition.players.domain.Player
+import com.codely.competition.players.domain.PlayerRepository
+import com.codely.competition.players.domain.SearchPlayerCriteria
 import com.codely.competition.players.domain.SearchPlayerCriteria.ByClub
 import com.codely.shared.dispatcher.withIOContext
 import org.springframework.data.annotation.Id
@@ -49,7 +55,7 @@ internal fun Player.toDocument(): PlayerDocument =
     )
 
 @Component
-class MongoPlayerRepository(private val repository: JpaPlayerRepository): PlayerRepository {
+class MongoPlayerRepository(private val repository: JpaPlayerRepository) : PlayerRepository {
     override suspend fun save(player: Player) { repository.save(player.toDocument()) }
 
     override suspend fun find(criteria: FindPlayerCriteria): Player? =

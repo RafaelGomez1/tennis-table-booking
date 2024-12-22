@@ -14,8 +14,8 @@ class ClubsCreator(private val repository: ClubRepository) {
         clubNames
             .forEach { clubName ->
                 launch {
-                    if (repository.exists(ByNameAndLeague(clubName, leagueName))) Unit.also { println("Club $clubName already exists in $leagueName")  }
-                    else repository.save(Club(clubName, leagueName)).also { println("Persisting $clubName in $leagueName")  }
+                    if (repository.exists(ByNameAndLeague(clubName, leagueName))) Unit.also { println("Club $clubName already exists in $leagueName") }
+                    else repository.save(Club(clubName, leagueName)).also { println("Persisting $clubName in $leagueName") }
                 }.join()
             }
     }

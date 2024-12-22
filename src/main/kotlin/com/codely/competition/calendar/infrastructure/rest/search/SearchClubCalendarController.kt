@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class SearchClubCalendarController(private val repository: ClubCalendarRepository): BaseController() {
+class SearchClubCalendarController(private val repository: ClubCalendarRepository) : BaseController() {
 
     @GetMapping("/api/club-calendar")
     suspend fun search(@RequestParam league: String, @RequestParam club: String): Response<*> = coroutineScope {

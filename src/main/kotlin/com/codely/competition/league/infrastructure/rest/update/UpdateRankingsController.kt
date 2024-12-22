@@ -2,14 +2,18 @@ package com.codely.competition.league.infrastructure.rest.update
 
 import com.codely.competition.league.application.ranking.UpdateLeagueRankingCommand
 import com.codely.competition.league.application.ranking.UpdateRankingCommandHandler
-import com.codely.competition.league.domain.LeagueName
-import com.codely.competition.league.domain.LeagueName.*
+import com.codely.competition.league.domain.LeagueName.CUARTA
+import com.codely.competition.league.domain.LeagueName.PREFERENT
+import com.codely.competition.league.domain.LeagueName.PRIMERA
+import com.codely.competition.league.domain.LeagueName.SEGUNDA_A
+import com.codely.competition.league.domain.LeagueName.SEGUNDA_B
+import com.codely.competition.league.domain.LeagueName.TERCERA_A
+import com.codely.competition.league.domain.LeagueName.TERCERA_B
 import com.codely.shared.config.CompetitionConfig
 import com.codely.shared.response.Response
 import com.codely.shared.response.withoutBody
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.springframework.http.HttpStatus.ACCEPTED
@@ -39,7 +43,7 @@ class UpdateRankingsController(
             CUARTA to URL(cuarta.ranking),
         )
 
-        urls.forEach { ( league, url) ->
+        urls.forEach { (league, url) ->
             launch { processURLContent(url, league.name) }.join()
         }
 

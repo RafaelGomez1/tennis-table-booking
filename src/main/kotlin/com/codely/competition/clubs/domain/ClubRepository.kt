@@ -9,10 +9,10 @@ interface ClubRepository {
 }
 
 sealed interface ClubExistsCriteria {
-    class ByNameAndLeague(val clubName: ClubName, val leagueName: LeagueName): ClubExistsCriteria
+    class ByNameAndLeague(val clubName: ClubName, val leagueName: LeagueName) : ClubExistsCriteria
 }
 
 sealed interface SearchClubCriteria {
-    data object All: SearchClubCriteria
-    class ByLeague(val leagueName: LeagueName): SearchClubCriteria
+    data object All : SearchClubCriteria
+    class ByLeague(val leagueName: LeagueName) : SearchClubCriteria
 }

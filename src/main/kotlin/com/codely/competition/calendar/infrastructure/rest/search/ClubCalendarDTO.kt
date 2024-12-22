@@ -46,7 +46,7 @@ internal fun Match.toDTO(): MatchDTO =
     )
 
 internal fun MatchResult.toDTO(): MatchResultDTO =
-    when(this) {
+    when (this) {
         is Lost -> MatchResultDTO(name = name(), wonGames.value, lostGames.value)
         NotPlayed -> MatchResultDTO(name = name(), 0, 0)
         is Won -> MatchResultDTO(name = name(), wonGames.value, lostGames.value)

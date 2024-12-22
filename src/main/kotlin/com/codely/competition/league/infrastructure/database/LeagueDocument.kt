@@ -1,13 +1,19 @@
 package com.codely.competition.league.infrastructure.database
 
 import com.codely.competition.clubs.domain.ClubName
-import com.codely.competition.league.domain.*
+import com.codely.competition.league.domain.GameStats
+import com.codely.competition.league.domain.League
+import com.codely.competition.league.domain.LeagueGroup
+import com.codely.competition.league.domain.LeagueName
+import com.codely.competition.league.domain.LeagueStandings
+import com.codely.competition.league.domain.Points
+import com.codely.competition.league.domain.RankedPlayer
+import com.codely.competition.league.domain.Standing
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import java.time.ZonedDateTime
 import java.time.ZonedDateTime.now
 import java.time.ZonedDateTime.parse
-import java.util.*
+import java.util.UUID
 
 @Document(collection = "League")
 data class LeagueDocument(

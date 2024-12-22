@@ -1,19 +1,25 @@
 package com.codely.competition.clubs.infrastructure.database
 
-import com.codely.competition.clubs.domain.*
+import com.codely.competition.clubs.domain.SearchClubCriteria
+import com.codely.competition.clubs.domain.ClubExistsCriteria
+import com.codely.competition.clubs.domain.Club
+import com.codely.competition.clubs.domain.ClubName
+import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.clubs.domain.ClubExistsCriteria.ByNameAndLeague
 import com.codely.competition.clubs.domain.SearchClubCriteria.All
 import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
 import com.codely.competition.league.domain.LeagueName
+import com.codely.shared.dispatcher.withIOContext
+import kotlinx.coroutines.flow.toList
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
-interface JpaClubRepository : MongoRepository<ClubDocument, String> {
-    fun existsByNameAndLeague(name: String, league: String): Boolean
-    fun findAllByLeague(name: String): List<ClubDocument>
+interface JpaClubRepository : CoroutineCrudRepository<ClubDocument, String> {
+    suspend fun existsByNameAndLeague(name: String, league: String): Boolean
+    suspend fun findAllByLeague(name: String): List<ClubDocument>
 }
 
 @Document(collection = "Clubs")
@@ -29,17 +35,28 @@ data class ClubDocument(
 internal fun Club.toDocument(): ClubDocument = ClubDocument(id.toString(), clubName.value, leagueName.name)
 
 @Component
-class MongoClubDatabase(private val repository: JpaClubRepository): ClubRepository {
+class MongoClubDatabase(private val repository: JpaClubRepository) : ClubRepository {
 
-    override suspend fun save(club: Club) { repository.save(club.toDocument()) }
+    override suspend fun save(club: Club) {
+        withIOContext {
+            repository.save(club.toDocument())
+        }
+    }
     override suspend fun search(criteria: SearchClubCriteria): List<Club> =
-        when(criteria) {
-            All -> repository.findAll()
-            is ByLeague -> repository.findAllByLeague(criteria.leagueName.name)
-        }.map { it.toClub() }
+        withIOContext {
+            when (criteria) {
+                All -> repository.findAll().toList()
+                is ByLeague -> repository.findAllByLeague(criteria.leagueName.name)
+            }.map { it.toClub() }
+        }
 
     override suspend fun exists(criteria: ClubExistsCriteria): Boolean =
-        when(criteria) {
-            is ByNameAndLeague -> repository.existsByNameAndLeague(criteria.clubName.value, criteria.leagueName.name)
+        withIOContext {
+            when (criteria) {
+                is ByNameAndLeague -> repository.existsByNameAndLeague(
+                    criteria.clubName.value,
+                    criteria.leagueName.name
+                )
+            }
         }
 }

@@ -13,7 +13,6 @@ import com.codely.agenda.primaryadapter.rest.error.AgendaServerErrors.MAX_CAPACI
 import com.codely.agenda.primaryadapter.rest.error.AgendaServerErrors.USER_ALREADY_BOOKED
 import com.codely.shared.error.ServerError
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach

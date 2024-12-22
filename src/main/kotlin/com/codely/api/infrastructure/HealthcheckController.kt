@@ -9,5 +9,5 @@ class HealthcheckController {
 
     @GetMapping("/api/health")
     @ResponseBody
-    fun execute() = "OK"
+    suspend fun execute() = "OK"
 }

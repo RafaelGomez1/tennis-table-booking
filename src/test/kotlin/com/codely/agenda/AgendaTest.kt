@@ -8,12 +8,8 @@ class AgendaTest : AnnotationSpec() {
     fun `should add someone to a given day agenda`() {
         // Given
 
-
         // When
 
-
         // Then
-
     }
-
 }

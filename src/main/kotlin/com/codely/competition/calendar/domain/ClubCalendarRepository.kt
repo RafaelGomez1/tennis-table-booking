@@ -9,5 +9,5 @@ interface ClubCalendarRepository {
 }
 
 sealed class SearchClubCalendarCriteria {
-    class ByNameAndLeague(val leagueName: LeagueName, val clubName: ClubName): SearchClubCalendarCriteria()
+    class ByNameAndLeague(val leagueName: LeagueName, val clubName: ClubName) : SearchClubCalendarCriteria()
 }

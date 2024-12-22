@@ -10,9 +10,9 @@ import com.codely.admin.primaryadapter.rest.error.AdminServerErrors.INVALID_CRED
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody
+import kotlinx.coroutines.coroutineScope
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
-import kotlinx.coroutines.runBlocking
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.OK
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 class AdminSignInController(private val repository: AdminRepository) : BaseController() {
 
     @PostMapping("/api/admins/sign-in", headers = ["Authorization"])
-    fun signIn(@RequestHeader("Authorization") authHeader: String): Response<*> = runBlocking {
+    suspend fun signIn(@RequestHeader("Authorization") authHeader: String): Response<*> = coroutineScope {
         with(repository) {
             val (username, password) = extractCredentials(authHeader)
             fold(

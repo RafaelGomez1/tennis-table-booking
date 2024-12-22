@@ -8,21 +8,29 @@ import com.codely.agenda.domain.AgendaSearchByCriteria
 import com.codely.agenda.domain.AgendaSearchByCriteria.ByWeekAndYear
 import com.codely.agenda.secondaryadapter.database.document.JpaAgendaRepository
 import com.codely.agenda.secondaryadapter.database.document.toDocument
-import org.springframework.data.repository.findByIdOrNull
+import com.codely.shared.dispatcher.withIOContext
 import org.springframework.stereotype.Component
 
 @Component
 class MongoAgendaRepository(private val repository: JpaAgendaRepository) : AgendaRepository {
 
-    override suspend fun save(agenda: Agenda) { repository.save(agenda.toDocument()) }
+    override suspend fun save(agenda: Agenda) {
+        withIOContext {
+            repository.save(agenda.toDocument())
+        }
+    }
 
     override suspend fun search(criteria: AgendaSearchByCriteria): List<Agenda> =
-        when (criteria) {
-            is ByWeekAndYear -> repository.findAllByWeekAndYear(criteria.week, criteria.year).map { document -> document.toAgenda() }
+        withIOContext {
+            when (criteria) {
+                is ByWeekAndYear -> repository.findAllByWeekAndYear(criteria.week, criteria.year)
+            }.map { document -> document.toAgenda() }
         }
 
     override suspend fun find(criteria: AgendaFindByCriteria): Agenda? =
-        when (criteria) {
-            is ById -> repository.findByIdOrNull(criteria.id.toString())?.toAgenda()
+        withIOContext {
+            when (criteria) {
+                is ById -> repository.findById(criteria.id.toString())
+            }?.toAgenda()
         }
 }

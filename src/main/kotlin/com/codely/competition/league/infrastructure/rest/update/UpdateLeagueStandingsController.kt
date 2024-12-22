@@ -8,8 +8,8 @@ import com.codely.competition.league.domain.LeagueRepository
 import com.codely.shared.config.CompetitionConfig
 import com.codely.shared.response.Response
 import com.codely.shared.response.withoutBody
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.text.PDFTextStripper
 import org.springframework.http.HttpStatus.ACCEPTED
 import org.springframework.web.bind.annotation.PostMapping
@@ -27,7 +27,7 @@ class UpdateLeagueStandingsController(
     private val textStripper = PDFTextStripper()
 
     @PostMapping("/api/standings")
-    fun ranking(): Response<*> = runBlocking {
+    suspend fun ranking(): Response<*> = coroutineScope {
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
         val standings = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta)
 

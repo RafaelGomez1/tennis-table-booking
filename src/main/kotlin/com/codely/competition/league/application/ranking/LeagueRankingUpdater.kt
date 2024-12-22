@@ -3,7 +3,11 @@ package com.codely.competition.league.application.ranking
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
-import com.codely.competition.league.domain.*
+import com.codely.competition.league.domain.GameStats
+import com.codely.competition.league.domain.League
+import com.codely.competition.league.domain.LeagueName
+import com.codely.competition.league.domain.LeagueRepository
+import com.codely.competition.league.domain.RankedPlayer
 import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
 import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
 import com.codely.competition.players.domain.FindPlayerCriteria.ByClubAndName
@@ -13,14 +17,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 class LeagueRankingUpdater(
     private val playerRepository: PlayerRepository,
     private val clubRepository: ClubRepository,
     private val leagueRepository: LeagueRepository
 ) {
-    
+
     suspend operator fun invoke(lines: List<String>, leagueName: LeagueName) = coroutineScope {
         val sanitizedList = lines
             .filter { line -> !BLACKLISTED_KEYWORDS.any { it in line } }
@@ -41,7 +45,7 @@ class LeagueRankingUpdater(
         val club = clubs.first { it in input }
         val playerName = findPlayerName(input, clubs)
         val player = findPlayer(club, leagueName, playerName)
-        
+
         return player?.let {
             val gameStats = findGameStats(input)
             val ranking = input.split(" ")[0].replaceFirst(player.id.toString(), "").toInt()

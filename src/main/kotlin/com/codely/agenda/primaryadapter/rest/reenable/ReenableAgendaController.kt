@@ -16,7 +16,7 @@ import com.codely.shared.authorization.executeIfAllowed
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.coroutineScope
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.FORBIDDEN
 import org.springframework.http.HttpStatus.NOT_FOUND
@@ -33,7 +33,7 @@ class ReenableAgendaController(
 ) : BaseController() {
 
     @PatchMapping("/api/agendas/{agendaId}/reenable")
-    fun reenableAgenda(@PathVariable agendaId: String, @RequestParam accessKey: String): Response<*> = runBlocking {
+    suspend fun reenableAgenda(@PathVariable agendaId: String, @RequestParam accessKey: String): Response<*> = coroutineScope {
         with(repository) {
             with(adminRepository) {
                 fold(

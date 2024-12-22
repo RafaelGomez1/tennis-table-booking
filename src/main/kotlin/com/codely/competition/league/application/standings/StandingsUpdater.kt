@@ -1,18 +1,27 @@
 package com.codely.competition.league.application.standings
 
-import com.codely.competition.calendar.domain.*
+import com.codely.competition.calendar.domain.ClubCalendar
+import com.codely.competition.calendar.domain.ClubCalendarRepository
+import com.codely.competition.calendar.domain.Match
+import com.codely.competition.calendar.domain.MatchResult
 import com.codely.competition.calendar.domain.SearchClubCalendarCriteria.ByNameAndLeague
 import com.codely.competition.clubs.domain.Club
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.clubs.domain.SearchClubCriteria.ByLeague
-import com.codely.competition.league.domain.*
+import com.codely.competition.league.domain.League
+import com.codely.competition.league.domain.LeagueGroup
+import com.codely.competition.league.domain.LeagueName
+import com.codely.competition.league.domain.LeagueRepository
+import com.codely.competition.league.domain.LeagueStandings
+import com.codely.competition.league.domain.Points
 import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
+import com.codely.competition.league.domain.Standing
 import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.UUID
 import java.util.regex.Pattern
 
 context(LeagueRepository, ClubRepository, ClubCalendarRepository)
@@ -57,7 +66,6 @@ private fun List<String>.obtainClubCalendar(tag: String, clubs: List<Club>, leag
     val resultList = mutableListOf<String>()
     var segmentCount = 1
     var startIndex = -1
-
 
     for ((index, element) in this.withIndex()) {
         if (element.contains(tag)) {

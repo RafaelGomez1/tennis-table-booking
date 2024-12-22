@@ -2,7 +2,6 @@ package com.codely.competition.league.domain
 
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.players.domain.PlayerId
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.ZonedDateTime.now
 import java.util.UUID
@@ -59,5 +58,3 @@ data class LeagueStandings(
     val points: Points,
     val standing: Standing
 )
-
-

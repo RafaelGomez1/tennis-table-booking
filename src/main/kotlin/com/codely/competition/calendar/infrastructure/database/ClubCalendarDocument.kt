@@ -4,12 +4,14 @@ import com.codely.competition.calendar.domain.ClubCalendar
 import com.codely.competition.calendar.domain.Games
 import com.codely.competition.calendar.domain.Match
 import com.codely.competition.calendar.domain.MatchResult
-import com.codely.competition.calendar.domain.MatchResult.*
+import com.codely.competition.calendar.domain.MatchResult.Won
+import com.codely.competition.calendar.domain.MatchResult.Lost
+import com.codely.competition.calendar.domain.MatchResult.NotPlayed
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.league.domain.LeagueName
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.*
+import java.util.UUID
 
 @Document(collection = "Club Calendar")
 data class ClubCalendarDocument(
@@ -54,13 +56,12 @@ data class MatchResultDocument(
     val gamesLost: Int
 )
 
-internal fun matchResultFrom(name:String, wonGames: Int, lostGames: Int): MatchResult =
-    when(name) {
+internal fun matchResultFrom(name: String, wonGames: Int, lostGames: Int): MatchResult =
+    when (name) {
         "LOST" -> Lost(Games(wonGames), Games(lostGames))
         "WON" -> Won(Games(wonGames), Games(lostGames))
         else -> NotPlayed
     }
-
 
 internal fun ClubCalendar.toDocument(): ClubCalendarDocument =
     ClubCalendarDocument(
@@ -80,7 +81,7 @@ internal fun Match.toDocument(): MatchDocument =
     )
 
 internal fun MatchResult.toDocument(): MatchResultDocument =
-    when(this) {
+    when (this) {
         is Lost -> MatchResultDocument(name = name(), wonGames.value, lostGames.value)
         NotPlayed -> MatchResultDocument(name = name(), 0, 0)
         is Won -> MatchResultDocument(name = name(), wonGames.value, lostGames.value)

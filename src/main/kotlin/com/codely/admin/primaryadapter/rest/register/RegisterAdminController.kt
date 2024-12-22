@@ -12,7 +12,7 @@ import com.codely.admin.primaryadapter.rest.error.AdminServerErrors.INVALID_IDEN
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.coroutineScope
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.web.bind.annotation.PathVariable
@@ -28,7 +28,7 @@ class RegisterAdminController(
 ) : BaseController() {
 
     @PostMapping("/admins/{adminId}")
-    fun register(@PathVariable adminId: String, @RequestBody body: RegisterAdminDTO): Response<*> = runBlocking {
+    suspend fun register(@PathVariable adminId: String, @RequestBody body: RegisterAdminDTO): Response<*> = coroutineScope {
         with(repository) {
             with(accessKeyGenerator) {
                 with(passwordEncrypter) {

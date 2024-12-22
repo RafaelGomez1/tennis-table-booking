@@ -19,7 +19,6 @@ suspend fun bookAgenda(id: UUID, name: Player, hourId: UUID): Agenda {
     val updatedAgenda =
         recover({ agenda.bookAvailableHour(hourId, name) }) { raise(DomainError(it)) }
 
-
     save(updatedAgenda)
     return updatedAgenda
 }
@@ -28,5 +27,5 @@ sealed class BookAgendaError {
     data object InvalidUUID : BookAgendaError()
     data object InvalidPlayerName : BookAgendaError()
     data object AgendaNotFound : BookAgendaError()
-    class DomainError(val error: BookAgendaErrorDomain): BookAgendaError()
+    class DomainError(val error: BookAgendaErrorDomain) : BookAgendaError()
 }

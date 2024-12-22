@@ -13,5 +13,4 @@ suspend fun handle(query: SearchLeagueQuery): League? {
     return searchLeagueRanking(SearchLeagueCriteria.from(leagueName, clubName))
 }
 
-
 data class SearchLeagueQuery(val league: String, val club: String?)

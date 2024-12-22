@@ -8,10 +8,10 @@ import kotlinx.coroutines.launch
 
 class PlayerCreator(private val repository: PlayerRepository) {
 
-    operator suspend fun invoke(players: List<Player>): Unit = coroutineScope {
+    suspend operator fun invoke(players: List<Player>): Unit = coroutineScope {
         players
             .forEach { player -> launch {
-                if(!repository.exists(ById(player.id))) repository.save(player).also { println("Persisting player ${player.id} ${player.name} ${player.clubName}") }
+                if (!repository.exists(ById(player.id))) repository.save(player).also { println("Persisting player ${player.id} ${player.name} ${player.clubName}") }
                 else Unit.also { println("Player ${player.id} ${player.name} ${player.clubName} already exists") }
             } }
     }

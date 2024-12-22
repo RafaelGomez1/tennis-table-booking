@@ -53,7 +53,7 @@ sealed class MatchResult {
     companion object {
         fun create(wonGames: String, lostGames: String): MatchResult =
             when {
-                wonGames == "N/A" || lostGames == "N/A" ->  NotPlayed
+                wonGames == "N/A" || lostGames == "N/A" -> NotPlayed
                 wonGames.toInt() > lostGames.toInt() -> Won(Games(wonGames.toInt()), Games(lostGames.toInt()))
                 lostGames.toInt() > wonGames.toInt() -> Lost(Games(wonGames.toInt()), Games(lostGames.toInt()))
                 else -> NotPlayed
@@ -61,7 +61,7 @@ sealed class MatchResult {
     }
 
     fun name(): String =
-        when(this) {
+        when (this) {
             is Lost -> "LOST"
             NotPlayed -> "NOT_PLAYED"
             is Won -> "WON"

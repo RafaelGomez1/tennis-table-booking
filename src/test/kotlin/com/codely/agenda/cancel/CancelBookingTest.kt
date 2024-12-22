@@ -9,7 +9,6 @@ import com.codely.agenda.primaryadapter.rest.cancel.CancelBookingDTO
 import com.codely.agenda.primaryadapter.rest.error.AgendaServerErrors.USER_NOT_BOOKED
 import com.codely.shared.error.ServerError
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach

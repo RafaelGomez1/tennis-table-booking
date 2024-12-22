@@ -142,7 +142,21 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xcontext-receivers", "-Xmx512m", "-XX:+UseG1GC")
+        freeCompilerArgs = listOf(
+            "-Xjsr305=strict",
+            "-Xcontext-receivers",
+            "-Xms256m",
+            "-Xmx256m",
+            "-Xss256k",
+            "-XX:MaxMetaspaceSize=128m",
+            "-XX:+UseG1GC",                             // Default GC: G1GC
+            "-XX:MaxGCPauseMillis=200",                 // Reduce pause times during GC
+            "-XX:+ExplicitGCInvokesConcurrent",         // Enable concurrent explicit GC
+            "-XX:MaxRAMPercentage=50.0",                // Limit JVM heap to 50% of available memory
+            "-XX:+UseContainerSupport",                 // Enable container awareness
+            "-XX:InitialRAMPercentage=25.0",            // Start with 25% of available memory
+            "-XX:MaxMetaspaceSize=128m"                 // Limit metaspace memory usage
+        )
         jvmTarget = "21"
     }
 }

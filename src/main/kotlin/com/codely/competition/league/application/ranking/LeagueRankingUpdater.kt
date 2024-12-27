@@ -46,13 +46,15 @@ class LeagueRankingUpdater(
         val playerName = findPlayerName(input, clubs)
         val player = findPlayer(club, leagueName, playerName)
 
-        return player?.let {
+        val finalPlayer = player?.let {
             val gameStats = findGameStats(input)
             val ranking = input.split(" ")[0].replaceFirst(player.id.toString(), "").toInt()
             val clubName = if (club == it.clubName.value) it.clubName.value else club
             RankedPlayer(it.id, it.name, clubName, gameStats, ranking)
                 .also { ranked -> println("Player found, creating ranking $ranked") }
         } ?: createRankedPlayerFromData(input, club, playerName, clubs)
+
+        return finalPlayer
     }
 
     private suspend fun findPlayer(

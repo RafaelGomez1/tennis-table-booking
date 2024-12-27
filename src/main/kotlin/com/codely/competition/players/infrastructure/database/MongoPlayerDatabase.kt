@@ -13,21 +13,41 @@ import com.codely.competition.players.domain.SearchPlayerCriteria
 import com.codely.competition.players.domain.SearchPlayerCriteria.ByClub
 import com.codely.shared.dispatcher.withIOContext
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.TextIndexed
 import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Component
 
 interface JpaPlayerRepository : CoroutineCrudRepository<PlayerDocument, Long> {
     suspend fun findAllByClub(club: String): List<PlayerDocument>
-    suspend fun findByClubContainingIgnoreCaseAndInitialLeagueAndNameContaining(club: String, initialLeague: String, name: String): PlayerDocument?
-    suspend fun findByClubContainingIgnoreCaseAndNameContaining(club: String, name: String): PlayerDocument?
+
+//    suspend fun findByClubContainingIgnoreCaseAndInitialLeagueAndNameContaining(club: String, initialLeague: String, name: String): PlayerDocument?
+//    suspend fun findByClubContainingIgnoreCaseAndNameContaining(club: String, name: String): PlayerDocument?
+
+    // Search by name (text search), filtered by club and initialLeague
+    @Query("{ 'club': { '\$regex': ?0, '\$options': 'i' }, 'initialLeague': ?1, '\$text': { '\$search': ?2 } }")
+    suspend fun findByClubContainingIgnoreCaseAndInitialLeagueAndNameContaining(
+        club: String,
+        initialLeague: String,
+        name: String
+    ): List<PlayerDocument>
+
+    // Search by name (text search), filtered by club
+    @Query("{ 'club': { '\$regex': ?0, '\$options': 'i' }, '\$text': { '\$search': ?1 } }")
+    suspend fun findByClubContainingIgnoreCaseAndNameContaining(
+        club: String,
+        name: String
+    ): List<PlayerDocument>
 }
 
 @Document(collection = "Players")
 data class PlayerDocument(
     @Id
     val id: Long,
+    @TextIndexed
     val name: String,
+
     val club: String,
     val initialRanking: Int,
     val initialLeague: String,
@@ -67,8 +87,11 @@ class MongoPlayerRepository(private val repository: JpaPlayerRepository) : Playe
                         club = criteria.club.value,
                         initialLeague = criteria.leagueName.name,
                         name = criteria.name
-                    )
-                is ByClubAndName -> repository.findByClubContainingIgnoreCaseAndNameContaining(criteria.club.value, criteria.name)
+                    ).firstOrNull { it.containsNameInAnyOrder(criteria.name) }
+
+                is ByClubAndName ->
+                    repository.findByClubContainingIgnoreCaseAndNameContaining(criteria.club.value, criteria.name)
+                        .firstOrNull { it.containsNameInAnyOrder(criteria.name) }
             }?.toPlayer()
         }
 
@@ -85,4 +108,22 @@ class MongoPlayerRepository(private val repository: JpaPlayerRepository) : Playe
                 is ExistsPlayerCriteria.ById -> repository.existsById(criteria.id)
             }
         }
+
+    private fun PlayerDocument.containsNameInAnyOrder(b: String): Boolean {
+        // Split both strings into lists of words
+        val wordsA = name.split("\\s+".toRegex()).map { it.trim().lowercase() }
+        val wordsB = b.split("\\s+".toRegex()).map { it.trim().lowercase() }
+
+        // Create maps to count the frequency of each word
+        val wordCountA = wordsA.groupingBy { it }.eachCount()
+        val wordCountB = wordsB.groupingBy { it }.eachCount()
+
+        // Check if A contains all words required by B in sufficient quantity
+        for ((word, count) in wordCountB) {
+            if (wordCountA[word] ?: 0 < count) {
+                return false
+            }
+        }
+        return true
+    }
 }

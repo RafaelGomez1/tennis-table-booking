@@ -65,19 +65,35 @@ class UpdatePlayersCommandHandler(
         val promotedToHigherLeagues = LeagueName.parseNames().any { it in splitInput.last() }
         val id = splitInput[0]
         val initialRanking = splitInput.getInitialRanking().toInt()
-        splitInput = input.replace(id, "")
-            .trim()
-            .split(" ")
-            .filter { !it.contains("/") }
+
+        splitInput =
+            input.replace(id, "")
+                .trim()
+                .split(" ")
+                .filter { !it.contains("/") }
+
+        val playerName =
+            splitInput
+                .joinToString(" ")
+                .uppercase()
+                .replace(Regex("[0-9]"), "")
+                .trim()
 
         return Player.create(
             id = id.toLong(),
-            name = splitInput.joinToString(" ").uppercase(),
+            name = playerName,
             club = clubName,
             initialRanking = initialRanking,
             leagueName = leagueName,
             promotedToHigherLeagues = promotedToHigherLeagues
         )
+    }
+
+    private fun splitAlphaNumeric(parts: List<String>): List<String> {
+        return parts.flatMap { part ->
+            // Use a regular expression to split into letter-only and number-only substrings
+            Regex("[A-Za-z]+|\\d+").findAll(part).map { it.value }.toList()
+        }
     }
 
     private fun List<String>.getInitialRanking(): String {

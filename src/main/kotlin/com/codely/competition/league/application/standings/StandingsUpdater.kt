@@ -2,9 +2,9 @@ package com.codely.competition.league.application.standings
 
 import com.codely.competition.calendar.domain.ClubCalendar
 import com.codely.competition.calendar.domain.ClubCalendarRepository
+import com.codely.competition.calendar.domain.FindClubCalendarCriteria.ByClubNameAndLeague
 import com.codely.competition.calendar.domain.Match
 import com.codely.competition.calendar.domain.MatchResult
-import com.codely.competition.calendar.domain.SearchClubCalendarCriteria.ByNameAndLeague
 import com.codely.competition.clubs.domain.Club
 import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.clubs.domain.ClubRepository
@@ -51,7 +51,7 @@ suspend fun updateStandings(leagueName: LeagueName, group: LeagueGroup, input: S
     save(league.updateStandings(group, leagueStandings))
 
     clubsCalendar.forEach { clubCalendar ->
-        val actualCalendar = search(ByNameAndLeague(clubName = clubCalendar.clubName, leagueName = leagueName))
+        val actualCalendar = find(ByClubNameAndLeague(clubName = clubCalendar.clubName, leagueName = leagueName))
 
         val clubCalendarToSave = actualCalendar
             ?.updateMatches(clubCalendar.matches)
@@ -114,8 +114,15 @@ private fun List<String>.obtainClubCalendar(tag: String, clubs: List<Club>, leag
 
                     val result = MatchResult.create(gamesWon, gamesLost)
 
+                    val matchId =
+                        rowWithoutTeams
+                            .trim()
+                            .removeRange(0, 3)
+                            .replace(Regex("\\d{2}:\\d{2}"), "")
+                            .replace(Regex("[^0-9]"), "")
+
                     Match(
-                        id = UUID.randomUUID().toString(),
+                        id = matchId,
                         visitorClub = ClubName(value = rivalTeam.trimIndent()),
                         result = result,
                         dateTime = dateTime,

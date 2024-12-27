@@ -1,16 +1,17 @@
 package com.codely.competition.players.application.create
 
 import com.codely.competition.clubs.application.create.ClubsCreator
-import com.codely.competition.clubs.domain.ClubRepository
 import com.codely.competition.clubs.domain.ClubName
+import com.codely.competition.clubs.domain.ClubRepository
+import com.codely.competition.league.domain.LeagueName
 import com.codely.competition.players.domain.Player
 import com.codely.competition.players.domain.PlayerRepository
-import com.codely.competition.league.domain.LeagueName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.springframework.stereotype.Component
 
 data class UpdatePlayerCommand(
+    val group: String,
     val playerListText: List<String>,
     val league: String
 )
@@ -33,10 +34,11 @@ class UpdatePlayersCommandHandler(
         val clubs = sanitizedList.filter { it.isNotEmpty() && !it.first().isDigit() }
 
         val groupedPlayers = groupByClub(sanitizedList, clubs, leagueName)
+
         groupedPlayers.values.map { clubPlayers -> launch { createPlayers(clubPlayers) }.join() }
 
-        val x = clubs.map { ClubName(it) }
-        createClubs(x, leagueName)
+        val domainClubs = clubs.map { ClubName(it) }
+        createClubs(command.group, domainClubs, leagueName)
     }
 
     private fun groupByClub(inputList: List<String>, clubNames: List<String>, leagueName: LeagueName): Map<String, List<Player>> {
@@ -57,18 +59,25 @@ class UpdatePlayersCommandHandler(
     }
 
     private fun mapToPlayer(input: String, clubName: String, leagueName: LeagueName): Player {
-        return input.split(" ")
+        var splitInput = input.split(" ")
             .filter { it.isNotBlank() }
-            .let { elements ->
-                Player.create(
-                    id = elements[0].toLong(),
-                    name = "${elements[2]} ${elements[1]}".uppercase(),
-                    club = clubName,
-                    initialRanking = elements.getInitialRanking().toInt(),
-                    leagueName = leagueName,
-                    promotedToHigherLeagues = LeagueName.parseNames().any { it in elements.last() }
-                )
-            }
+
+        val promotedToHigherLeagues = LeagueName.parseNames().any { it in splitInput.last() }
+        val id = splitInput[0]
+        val initialRanking = splitInput.getInitialRanking().toInt()
+        splitInput = input.replace(id, "")
+            .trim()
+            .split(" ")
+            .filter { !it.contains("/") }
+
+        return Player.create(
+            id = id.toLong(),
+            name = splitInput.joinToString(" ").uppercase(),
+            club = clubName,
+            initialRanking = initialRanking,
+            leagueName = leagueName,
+            promotedToHigherLeagues = promotedToHigherLeagues
+        )
     }
 
     private fun List<String>.getInitialRanking(): String {

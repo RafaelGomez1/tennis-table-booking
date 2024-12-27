@@ -10,12 +10,12 @@ import kotlinx.coroutines.launch
 
 class ClubsCreator(private val repository: ClubRepository) {
 
-    suspend operator fun invoke(clubNames: List<ClubName>, leagueName: LeagueName) = coroutineScope {
+    suspend operator fun invoke(group: String, clubNames: List<ClubName>, leagueName: LeagueName) = coroutineScope {
         clubNames
             .forEach { clubName ->
                 launch {
                     if (repository.exists(ByNameAndLeague(clubName, leagueName))) Unit.also { println("Club $clubName already exists in $leagueName") }
-                    else repository.save(Club(clubName, leagueName)).also { println("Persisting $clubName in $leagueName") }
+                    else repository.save(Club(clubName = clubName, leagueName = leagueName, group = group)).also { println("Persisting $clubName in $leagueName") }
                 }.join()
             }
     }

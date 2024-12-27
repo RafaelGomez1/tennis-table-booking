@@ -3,7 +3,7 @@ package com.codely.competition.calendar.infrastructure.rest.search
 import com.codely.competition.calendar.application.search.SearchClubCalendarQuery
 import com.codely.competition.calendar.application.search.handle
 import com.codely.competition.calendar.domain.ClubCalendarRepository
-import com.codely.competition.calendar.infrastructure.error.ClubCalendarRankingServerErrors.CLUB_CALENDAR_DOES_NOT_EXIST
+import com.codely.competition.calendar.infrastructure.rest.error.ClubCalendarRankingServerErrors.CLUB_CALENDAR_DOES_NOT_EXIST
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody

@@ -24,16 +24,18 @@ class ProcessClubPlayerSubscriber(
         val ligas = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta)
 
         ligas.map { liga ->
-            liga.players.values
-                .map { URL(it) }
-                .map { launch { processURLContent(it, liga.name) }.join() }
+            liga.players.forEach { key, value ->
+                launch {
+                    processURLContent(group = key, url = URL(value), league = liga.name)
+                }
+            }
         }
     }
 
-    private suspend fun processURLContent(url: URL, league: String) {
+    private suspend fun processURLContent(group: String, url: URL, league: String) {
         PDDocument.load(url.openStream()).use { pdDocument ->
             val text = textStripper.getText(pdDocument).split("\n")
-            updater.handle(UpdatePlayerCommand(text, league))
+            updater.handle(UpdatePlayerCommand(group, text, league))
         }
     }
 }

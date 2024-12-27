@@ -27,12 +27,13 @@ data class ClubDocument(
     @Id
     val id: String,
     val name: String,
-    val league: String
+    val league: String,
+    val group: String,
 ) {
-    fun toClub(): Club = Club(ClubName(name), LeagueName.valueOf(league), id = UUID.fromString(id))
+    fun toClub(): Club = Club(ClubName(name), LeagueName.valueOf(league), id = UUID.fromString(id), group = group)
 }
 
-internal fun Club.toDocument(): ClubDocument = ClubDocument(id.toString(), clubName.value, leagueName.name)
+internal fun Club.toDocument(): ClubDocument = ClubDocument(id.toString(), clubName.value, leagueName.name, group)
 
 @Component
 class MongoClubDatabase(private val repository: JpaClubRepository) : ClubRepository {

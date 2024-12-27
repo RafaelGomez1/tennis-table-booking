@@ -1,4 +1,4 @@
-package com.codely.competition.calendar.infrastructure.error
+package com.codely.competition.calendar.infrastructure.rest.error
 
 object ClubCalendarRankingServerErrors {
 

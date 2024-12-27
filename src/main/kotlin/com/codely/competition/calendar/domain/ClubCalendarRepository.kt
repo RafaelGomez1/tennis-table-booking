@@ -5,9 +5,14 @@ import com.codely.competition.league.domain.LeagueName
 
 interface ClubCalendarRepository {
     suspend fun save(calendar: ClubCalendar)
-    suspend fun search(criteria: SearchClubCalendarCriteria): ClubCalendar?
+    suspend fun find(criteria: FindClubCalendarCriteria): ClubCalendar?
+    suspend fun search(criteria: SearchClubCalendarCriteria): List<ClubCalendar>
+}
+
+sealed class FindClubCalendarCriteria {
+    class ByClubNameAndLeague(val leagueName: LeagueName, val clubName: ClubName) : FindClubCalendarCriteria()
 }
 
 sealed class SearchClubCalendarCriteria {
-    class ByNameAndLeague(val leagueName: LeagueName, val clubName: ClubName) : SearchClubCalendarCriteria()
+    class ByClubNameAndLeague(val leagueName: LeagueName): SearchClubCalendarCriteria()
 }

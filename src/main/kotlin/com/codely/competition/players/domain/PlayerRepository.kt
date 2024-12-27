@@ -4,7 +4,6 @@ import com.codely.competition.clubs.domain.ClubName
 import com.codely.competition.league.domain.LeagueName
 
 interface PlayerRepository {
-
     suspend fun save(player: Player)
     suspend fun find(criteria: FindPlayerCriteria): Player?
     suspend fun search(criteria: SearchPlayerCriteria): List<Player>

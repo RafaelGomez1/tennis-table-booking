@@ -27,7 +27,7 @@ class RegisterAdminController(
     private val passwordEncrypter: PasswordEncrypter
 ) : BaseController() {
 
-    @PostMapping("/admins/{adminId}")
+    @PostMapping("/api/admins/{adminId}")
     suspend fun register(@PathVariable adminId: String, @RequestBody body: RegisterAdminDTO): Response<*> = coroutineScope {
         with(repository) {
             with(accessKeyGenerator) {

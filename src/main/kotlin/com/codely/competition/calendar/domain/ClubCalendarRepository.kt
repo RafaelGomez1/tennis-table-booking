@@ -14,5 +14,5 @@ sealed class FindClubCalendarCriteria {
 }
 
 sealed class SearchClubCalendarCriteria {
-    class ByClubNameAndLeague(val leagueName: LeagueName): SearchClubCalendarCriteria()
+    class ByClubNameAndLeague(val leagueName: LeagueName) : SearchClubCalendarCriteria()
 }

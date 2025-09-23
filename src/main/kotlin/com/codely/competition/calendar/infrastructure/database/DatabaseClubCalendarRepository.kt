@@ -27,7 +27,7 @@ class DatabaseClubCalendarRepository(private val repository: JpaClubCalendarRepo
 
     override suspend fun search(criteria: SearchClubCalendarCriteria): List<ClubCalendar> =
         withIOContext {
-            when(criteria) {
+            when (criteria) {
                 is SearchClubCalendarCriteria.ByClubNameAndLeague ->
                     repository.findAllByLeague(criteria.leagueName.name)
             }.map { it.toDomain() }

@@ -116,7 +116,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-fx-coroutines:1.1.2")
 
     // PDF to TEXT
-    implementation("org.apache.pdfbox:pdfbox:2.0.7")
+    implementation("org.apache.pdfbox:pdfbox:2.0.24")
 
     // Testing
     testImplementation("org.jetbrains.kotlin:kotlin-test")

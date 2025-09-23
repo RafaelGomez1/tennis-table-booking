@@ -31,7 +31,7 @@ class UpdatePlayersCommandHandler(
 
         val leagueName = LeagueName.valueOf(command.league)
 
-        val clubs = sanitizedList.filter { it.isNotEmpty() && !it.first().isDigit() }
+        val clubs = sanitizedList.filter { it.isNotEmpty() && (!it.first().isDigit() || it == "304 TT") }
 
         val groupedPlayers = groupByClub(sanitizedList, clubs, leagueName)
 
@@ -59,7 +59,10 @@ class UpdatePlayersCommandHandler(
     }
 
     private fun mapToPlayer(input: String, clubName: String, leagueName: LeagueName): Player {
-        var splitInput = input.split(" ")
+        var splitInput = input
+            .replace("4a", "")
+            .replace("3aB", "")
+            .split(" ")
             .filter { it.isNotBlank() }
 
         val promotedToHigherLeagues = LeagueName.parseNames().any { it in splitInput.last() }

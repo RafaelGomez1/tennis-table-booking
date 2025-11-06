@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'corretto'
           java-version: '21'
@@ -23,9 +23,11 @@ jobs:
       - name: Build and deploy image
         run: >
           ./gradlew jib --image=rafagomezp/tt-sant-andreu
+          -Djib.from.image=amazoncorretto:21
+          -Djib.to.image=rafagomezp/tt-sant-andreu
+          -Djib.to.tags=latest
           -Djib.to.auth.username=${{ secrets.DOCKERHUB_USER }}
           -Djib.to.auth.password=${{ secrets.DOCKERHUB_PWD }}
-          -Djib.from.image=amazoncorretto:21
 
   deploy_to_digital_ocean:
     runs-on: ubuntu-latest
@@ -42,9 +44,26 @@ jobs:
           password: ${{ secrets.DIGITALOCEAN_DROPLET_PASSWORD }}
           debug: true
           script: |
-            container_id=$(docker ps -aqf "ancestor=rafagomezp/tt-sant-andreu")
-            echo "Container ID: $container_id"
-            docker stop $container_id
-            docker rm $container_id
-            docker pull rafagomezp/tt-sant-andreu
-            docker run -d -p 8080:8080 rafagomezp/tt-sant-andreu
+            set -euxo pipefail
+            IMAGE="rafagomezp/tt-sant-andreu"
+            CONTAINER="tt-sant-andreu"
+
+            echo "Stopping old container..."
+            docker rm -f "$CONTAINER" || true
+
+            echo "Force pulling latest image..."
+            docker pull --quiet --no-cache "$IMAGE:latest"
+
+            echo "Pruning dangling images..."
+            docker image prune -f
+
+            echo "Running container..."
+            docker run -d \
+              --name "$CONTAINER" \
+              --restart unless-stopped \
+              -p 8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              "$IMAGE:latest"
+
+            echo "Currently running image digest:"
+            docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE:latest"

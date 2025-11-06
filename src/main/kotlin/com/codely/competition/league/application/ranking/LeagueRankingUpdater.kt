@@ -12,6 +12,7 @@ import com.codely.competition.league.domain.SearchLeagueCriteria.ByName
 import com.codely.competition.players.application.create.BLACKLISTED_KEYWORDS
 import com.codely.competition.players.domain.FindPlayerCriteria.ByClubAndName
 import com.codely.competition.players.domain.FindPlayerCriteria.ByClubLeagueAndName
+import com.codely.competition.players.domain.Player
 import com.codely.competition.players.domain.PlayerRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -61,9 +62,14 @@ class LeagueRankingUpdater(
         club: String,
         leagueName: LeagueName,
         playerName: String
-    ) =
-        playerRepository.find(ByClubLeagueAndName(ClubName(club), leagueName, playerName))
+    ): Player? {
+        val reversedPlayerName = playerName.split(" ").reversed().joinToString(" ")
+
+        return playerRepository.find(ByClubLeagueAndName(ClubName(club), leagueName, playerName))
+            ?: playerRepository.find(ByClubLeagueAndName(ClubName(club), leagueName, reversedPlayerName))
             ?: playerRepository.find(ByClubAndName(ClubName(club), playerName))
+    }
+
 
     private fun createRankedPlayerFromData(input: String, club: String, playerName: String, clubs: List<String>): RankedPlayer {
         val updatedInput = input.formatInput(clubs)

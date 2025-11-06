@@ -1,7 +1,7 @@
 package com.codely.competition.league.domain
 
 enum class LeagueGroup {
-    G1, G2, G3, G4, G5;
+    G1, G2, G3, G4, G5, G6;
 
     companion object {
         fun fromString(value: String): LeagueGroup =

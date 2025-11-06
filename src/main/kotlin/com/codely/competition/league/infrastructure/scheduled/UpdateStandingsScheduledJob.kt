@@ -30,7 +30,7 @@ class UpdateStandingsScheduledJob(
 
         standings.map { liga ->
             liga.results.forEach { group, url ->
-                println("Starting ranking updating for ${liga.name}")
+                println("Starting ranking updating for ${liga.name} at $url")
                 launch { processURLContent(URL(url), liga.name, group) }
             }
         }

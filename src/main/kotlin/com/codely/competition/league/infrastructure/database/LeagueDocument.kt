@@ -118,7 +118,7 @@ internal fun Map<LeagueGroup, List<LeagueStandings>>.toDocument(): Map<String, L
 internal fun Map<String, List<LeagueStandingsDocument>>.toDomain(): Map<LeagueGroup, List<LeagueStandings>> =
     this.mapValues { (_, standingsList) ->
         standingsList.map { standing -> standing.toLeagueStandings() }
-    }.mapKeys { LeagueGroup.valueOf(it.key) }
+    }.mapKeys { LeagueGroup.fromString(it.key) }
 
 internal fun RankedPlayer.toDocument(): RankedPlayerDocument =
     RankedPlayerDocument(

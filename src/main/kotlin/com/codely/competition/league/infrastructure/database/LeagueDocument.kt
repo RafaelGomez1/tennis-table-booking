@@ -118,11 +118,7 @@ internal fun Map<LeagueGroup, List<LeagueStandings>>.toDocument(): Map<String, L
 internal fun Map<String, List<LeagueStandingsDocument>>.toDomain(): Map<LeagueGroup, List<LeagueStandings>> =
     this.mapValues { (_, standingsList) ->
         standingsList.map { standing -> standing.toLeagueStandings() }
-    }.mapKeys {
-        println("LeagueGroup constants at runtime: " + LeagueGroup.entries.joinToString { it.name })
-        println("Loaded from: " + LeagueGroup::class.java.protectionDomain.codeSource.location)
-        LeagueGroup.fromString(it.key)
-    }
+    }.mapKeys { LeagueGroup.fromString(it.key) }
 
 internal fun RankedPlayer.toDocument(): RankedPlayerDocument =
     RankedPlayerDocument(

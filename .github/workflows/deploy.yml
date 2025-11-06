@@ -21,10 +21,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build and deploy image
+        env:
+          SHA: ${{ github.sha }}
         run: >
           ./gradlew jib --image=rafagomezp/tt-sant-andreu
           -Djib.from.image=amazoncorretto:21
-          -Djib.to.tags=latest
+          -Djib.to.tags=${SHA}
           -Djib.to.auth.username=${{ secrets.DOCKERHUB_USER }}
           -Djib.to.auth.password=${{ secrets.DOCKERHUB_PWD }}
 
@@ -44,8 +46,10 @@ jobs:
           debug: true
           script: |
             container_id=$(docker ps -aqf "ancestor=rafagomezp/tt-sant-andreu")
+            TAG="${{ github.sha }}"
+            
             echo "Container ID: $container_id"
             docker stop $container_id
             docker rm $container_id
-            docker pull rafagomezp/tt-sant-andreu:latest
-            docker run -d -p 8080:8080 rafagomezp/tt-sant-andreu:latest
+            docker pull rafagomezp/tt-sant-andreu:"$TAG"
+            docker run -d -p 8080:8080 rafagomezp/tt-sant-andreu:"$TAG"

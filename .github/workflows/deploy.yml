@@ -36,34 +36,29 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get -y install sshpass
 
-      - name: Get into DigitalOcean Droplet
-        uses: appleboy/ssh-action@master
+      - name: Deploy latest image to DigitalOcean
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.DIGITALOCEAN_DROPLET_IP }}
           username: ${{ secrets.DIGITALOCEAN_DROPLET_USERNAME }}
           password: ${{ secrets.DIGITALOCEAN_DROPLET_PASSWORD }}
           debug: true
           script: |
-            set -euxo pipefail
+            set -euo pipefail
             IMAGE="rafagomezp/tt-sant-andreu"
             CONTAINER="tt-sant-andreu"
-
-            echo "Stopping old container..."
+      
             docker rm -f "$CONTAINER" || true
-
-            echo "Force pulling latest image..."
-            docker pull --quiet --no-cache "$IMAGE:latest"
-
-            echo "Pruning dangling images..."
+            docker image rm "$IMAGE:latest" || true
+            docker pull "$IMAGE:latest"
             docker image prune -f
-
-            echo "Running container..."
+      
             docker run -d \
               --name "$CONTAINER" \
               --restart unless-stopped \
               -p 8080:8080 \
               -e SPRING_PROFILES_ACTIVE=prod \
               "$IMAGE:latest"
+      
+            docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE:latest" || true
 
-            echo "Currently running image digest:"
-            docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE:latest"

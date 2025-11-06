@@ -24,7 +24,6 @@ jobs:
         run: >
           ./gradlew jib --image=rafagomezp/tt-sant-andreu
           -Djib.from.image=amazoncorretto:21
-          -Djib.to.image=rafagomezp/tt-sant-andreu
           -Djib.to.tags=latest
           -Djib.to.auth.username=${{ secrets.DOCKERHUB_USER }}
           -Djib.to.auth.password=${{ secrets.DOCKERHUB_PWD }}
@@ -36,29 +35,17 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get -y install sshpass
 
-      - name: Deploy latest image to DigitalOcean
-        uses: appleboy/ssh-action@v1
+      - name: Get into DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DIGITALOCEAN_DROPLET_IP }}
           username: ${{ secrets.DIGITALOCEAN_DROPLET_USERNAME }}
           password: ${{ secrets.DIGITALOCEAN_DROPLET_PASSWORD }}
           debug: true
           script: |
-            set -euo pipefail
-            IMAGE="rafagomezp/tt-sant-andreu"
-            CONTAINER="tt-sant-andreu"
-      
-            docker rm -f "$CONTAINER" || true
-            docker image rm "$IMAGE:latest" || true
-            docker pull "$IMAGE:latest"
-            docker image prune -f
-      
-            docker run -d \
-              --name "$CONTAINER" \
-              --restart unless-stopped \
-              -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              "$IMAGE:latest"
-      
-            docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE:latest" || true
-
+            container_id=$(docker ps -aqf "ancestor=rafagomezp/tt-sant-andreu")
+            echo "Container ID: $container_id"
+            docker stop $container_id
+            docker rm $container_id
+            docker pull rafagomezp/tt-sant-andreu:latest
+            docker run -d -p 8080:8080 rafagomezp/tt-sant-andreu:latest

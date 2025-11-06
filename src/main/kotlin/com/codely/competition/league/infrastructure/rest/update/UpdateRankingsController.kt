@@ -44,7 +44,7 @@ class UpdateRankingsController(
         )
 
         urls.forEach { (league, url) ->
-            launch { processURLContent(url, league.name) }.join()
+            processURLContent(url, league.name)
         }
 
         Response.status(ACCEPTED).withoutBody()

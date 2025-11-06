@@ -182,7 +182,9 @@ private fun String.mapToStandings(clubs: List<Club>): LeagueStandings {
     val pattern = Pattern.compile("([a-zA-Z].*[a-zA-Z])")
     val matcher = pattern.matcher(input)
 
-    val clubName = if (matcher.find()) matcher.group(1) else ""
+    val clubName =
+        if (this.contains("304 TT")) "304 TT"
+        else if (matcher.find()) matcher.group(1) else ""
 
     val actualClubName = clubs.first { it.clubName.value.contains(clubName) }.clubName.value
     val elements = this.replace(actualClubName, "").trim().split(" ")

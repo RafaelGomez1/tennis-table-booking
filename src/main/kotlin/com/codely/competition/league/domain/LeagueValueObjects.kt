@@ -5,7 +5,7 @@ enum class LeagueGroup {
 
     companion object {
         fun fromString(value: String): LeagueGroup =
-            values().first { it.name == value.uppercase() }
+            entries.first { it.name == value.uppercase() }
     }
 }
 

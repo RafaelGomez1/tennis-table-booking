@@ -9,7 +9,6 @@ import com.codely.shared.config.CompetitionConfig
 import com.codely.shared.response.Response
 import com.codely.shared.response.withoutBody
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import org.apache.pdfbox.text.PDFTextStripper
 import org.springframework.http.HttpStatus.ACCEPTED
 import org.springframework.web.bind.annotation.PostMapping
@@ -31,9 +30,9 @@ class UpdateLeagueStandingsController(
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
         val standings = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta)
 
-        standings.map { liga ->
-            liga.results.forEach { group, url ->
-                launch { processURLContent(URL(url), liga.name, group) }
+        standings.flatMap { liga ->
+            liga.results.map { (group, url) ->
+                processURLContent(URL(url), liga.name, group)
             }
         }
 

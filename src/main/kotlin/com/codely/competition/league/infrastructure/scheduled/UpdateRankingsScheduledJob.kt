@@ -42,7 +42,7 @@ class UpdateRankingsScheduledJob(
 
         urls.forEach { (league, url) ->
             println("Starting ranking updating for ${league.name}")
-            launch { processURLContent(url, league.name) }.join()
+            processURLContent(url, league.name)
         }
     }
 

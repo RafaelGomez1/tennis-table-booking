@@ -5,6 +5,7 @@ import com.codely.member.application.search.SearchMembersError
 import com.codely.member.application.search.SearchMembersQuery
 import com.codely.member.application.search.handle
 import com.codely.member.domain.MemberRepository
+import com.codely.member.primaryadapter.rest.MemberResponseDTO
 import com.codely.member.primaryadapter.rest.error.MemberServerErrors.INVALID_TYPE
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
@@ -29,7 +30,7 @@ class SearchMembersController(private val repository: MemberRepository) : BaseCo
             fold(
                 block = { handle(SearchMembersQuery(type = type, page = page, size = size)) },
                 recover = { error -> error.toServerError() },
-                transform = { result -> Response.status(OK).body(result) }
+                transform = { result -> Response.status(OK).body(MemberResponseDTO.fromDomain(result)) }
             )
         }
     }

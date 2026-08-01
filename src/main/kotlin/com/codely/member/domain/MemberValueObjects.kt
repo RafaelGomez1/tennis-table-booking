@@ -57,6 +57,24 @@ sealed class MemberType {
     data object AcademyIntermediate : MemberType()
     data class Competition(val team: Team) : MemberType()
 
+    fun academyGroup(): String? = when (this) {
+        is AcademyBeginner -> group.name
+        else -> null
+    }
+
+    fun team(): String? = when (this) {
+        is Competition -> team.name
+        else -> null
+    }
+
+    fun toName(): String =
+        when (this) {
+            is Casual -> "CASUAL"
+            is AcademyBeginner -> "ACADEMY_BEGINNER"
+            is AcademyIntermediate -> "ACADEMY_INTERMEDIATE"
+            is Competition -> "COMPETITION"
+        }
+
     companion object {
         fun fromString(value: String, academyGroup: String? = null, team: String? = null): MemberType =
             when (value.uppercase()) {

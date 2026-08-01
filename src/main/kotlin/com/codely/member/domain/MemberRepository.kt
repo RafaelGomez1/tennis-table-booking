@@ -15,6 +15,7 @@ interface MemberRepository {
     suspend fun save(member: Member)
     suspend fun find(criteria: MemberFindByCriteria): Member?
     suspend fun search(criteria: MemberSearchByCriteria, pageRequest: PageRequest): Page<Member>
+    suspend fun delete(id: MemberId)
 }
 
 sealed class MemberFindByCriteria {

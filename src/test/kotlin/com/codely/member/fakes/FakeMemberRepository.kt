@@ -48,4 +48,8 @@ class FakeMemberRepository : MemberRepository, FakeRepository<MemberId, Member> 
             totalElements = all.size.toLong()
         )
     }
+
+    override suspend fun delete(id: MemberId) {
+        elements.remove(id)
+    }
 }

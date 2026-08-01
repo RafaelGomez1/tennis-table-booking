@@ -3,6 +3,7 @@ package com.codely.member.infrastructure.database
 import com.codely.member.domain.Member
 import com.codely.member.domain.MemberFindByCriteria
 import com.codely.member.domain.MemberFindByCriteria.ById
+import com.codely.member.domain.MemberId
 import com.codely.member.domain.MemberRepository
 import com.codely.member.domain.MemberSearchByCriteria
 import com.codely.member.domain.MemberSearchByCriteria.All
@@ -51,4 +52,10 @@ class MongoMemberRepository(private val repository: JpaMemberRepository) : Membe
                 totalElements = totalElements
             )
         }
+
+    override suspend fun delete(id: MemberId) {
+        withIOContext {
+            repository.deleteById(id.value.toString())
+        }
+    }
 }

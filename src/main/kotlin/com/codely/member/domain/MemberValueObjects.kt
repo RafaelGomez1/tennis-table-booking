@@ -58,13 +58,13 @@ sealed class MemberType {
     data class Competition(val team: Team) : MemberType()
 
     companion object {
-        fun fromString(value: String, academyGroup: String? = null, team: String? = null): MemberType? =
+        fun fromString(value: String, academyGroup: String? = null, team: String? = null): MemberType =
             when (value.uppercase()) {
                 "CASUAL" -> Casual
-                "ACADEMY_BEGINNER" -> academyGroup?.let { AcademyBeginner(AcademyGroup.valueOf(it)) }
+                "ACADEMY_BEGINNER" -> AcademyBeginner(AcademyGroup.valueOf(academyGroup!!))
                 "ACADEMY_INTERMEDIATE" -> AcademyIntermediate
-                "COMPETITION" -> team?.let { Competition(Team.valueOf(it)) }
-                else -> null
+                "COMPETITION" -> Competition(Team.valueOf(team!!))
+                else -> throw IllegalArgumentException("Unknown MemberType: $value")
             }
     }
 }

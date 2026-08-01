@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.net.URL
 
@@ -23,7 +22,7 @@ class UpdateStandingsScheduledJob(
 ) {
     private val textStripper = PDFTextStripper()
 
-    @Scheduled(cron = "0 10 10 * * MON-TUE")
+//    @Scheduled(cron = "0 10 10 * * MON-TUE")
     fun execute() = runBlocking {
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
         val standings = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta)

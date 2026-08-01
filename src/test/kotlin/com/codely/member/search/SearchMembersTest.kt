@@ -1,8 +1,9 @@
 package com.codely.member.search
 
 import com.codely.member.MemberMother
-import com.codely.member.domain.Page
 import com.codely.member.fakes.FakeMemberRepository
+import com.codely.member.primaryadapter.rest.MemberResponseDTO
+import com.codely.member.primaryadapter.rest.PageDTO
 import com.codely.member.primaryadapter.rest.search.SearchMembersController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -32,8 +33,8 @@ class SearchMembersTest {
         val result = controller.search(type = null, page = 0, size = 20)
 
         assertEquals(OK, result.statusCode)
-        val page = result.body as Page<*>
-        assertEquals(2, page.totalElements)
+        val page = result.body as PageDTO<*>
+        assertEquals(2L, page.totalElements)
         assertEquals(2, page.content.size)
     }
 
@@ -47,9 +48,9 @@ class SearchMembersTest {
         val result = controller.search(type = "CASUAL", page = 0, size = 20)
 
         assertEquals(OK, result.statusCode)
-        val page = result.body as Page<*>
-        assertEquals(1, page.totalElements)
-        assertEquals(casual, page.content.first())
+        val page = result.body as PageDTO<*>
+        assertEquals(1L, page.totalElements)
+        assertEquals(MemberResponseDTO.fromDomain(casual), page.content.first())
     }
 
     @Test
@@ -64,8 +65,8 @@ class SearchMembersTest {
         val result = controller.search(type = null, page = 0, size = 2)
 
         assertEquals(OK, result.statusCode)
-        val page = result.body as Page<*>
-        assertEquals(3, page.totalElements)
+        val page = result.body as PageDTO<*>
+        assertEquals(3L, page.totalElements)
         assertEquals(2, page.content.size)
         assertEquals(2, page.totalPages)
     }
@@ -82,8 +83,8 @@ class SearchMembersTest {
         val result = controller.search(type = null, page = 1, size = 2)
 
         assertEquals(OK, result.statusCode)
-        val page = result.body as Page<*>
-        assertEquals(3, page.totalElements)
+        val page = result.body as PageDTO<*>
+        assertEquals(3L, page.totalElements)
         assertEquals(1, page.content.size)
     }
 }

@@ -7,7 +7,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.net.URL
 
@@ -18,7 +17,7 @@ class ProcessClubPlayerSubscriber(
 ) {
     private val textStripper = PDFTextStripper()
 
-    @Scheduled(cron = "0 0 9 * * MON-TUE")
+//    @Scheduled(cron = "0 0 9 * * MON-TUE")
     fun invoke() = runBlocking {
         val (preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta) = configuration
         val ligas = listOf(preferente, primera, segundaA, segundaB, terceraA, terceraB, cuarta)

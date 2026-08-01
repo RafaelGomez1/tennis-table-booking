@@ -113,7 +113,6 @@ data class AvailableHour(
         fun tuesday() = listOf(
             AvailableHour(from = 16, to = 17, registeredPlayers = emptyList(), type = MEMBERS_TIME),
             AvailableHour(from = 17, to = 18, registeredPlayers = emptyList(), type = MEMBERS_TIME),
-            AvailableHour(from = 18, to = 19, registeredPlayers = emptyList(), type = MEMBERS_TIME)
         )
 
         fun wednesday() = listOf(

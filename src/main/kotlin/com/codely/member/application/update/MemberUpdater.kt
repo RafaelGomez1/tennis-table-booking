@@ -4,7 +4,6 @@ import arrow.core.raise.Raise
 import com.codely.member.application.update.UpdateMemberError.MemberNotFound
 import com.codely.member.domain.ContactPhoneNumbers
 import com.codely.member.domain.Member
-import com.codely.member.domain.MemberFindByCriteria
 import com.codely.member.domain.MemberFindByCriteria.ById
 import com.codely.member.domain.MemberId
 import com.codely.member.domain.MemberName

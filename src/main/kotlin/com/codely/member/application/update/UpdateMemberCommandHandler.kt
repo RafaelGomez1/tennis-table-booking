@@ -19,8 +19,7 @@ suspend fun handle(command: UpdateMemberCommand) {
     val phoneNumbers = catch({
         ContactPhoneNumbers(command.phoneNumbers.map { ContactPhoneNumber(it) })
     }) { raise(UpdateMemberError.InvalidPhoneNumbers) }
-    val type = catch({ MemberType.fromString(command.type, command.academyGroup, command.team) })
-    { raise(UpdateMemberError.InvalidType) }
+    val type = catch({ MemberType.fromString(command.type, command.academyGroup, command.team) }) { raise(UpdateMemberError.InvalidType) }
 
     updateMember(id = id, name = name, surname = surname, phoneNumbers = phoneNumbers, type = type)
 }

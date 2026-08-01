@@ -27,7 +27,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -Dorg.gradle.java.home=$JAVA_HOME
 
       - name: Build with Gradle, run tests
         uses: gradle/gradle-build-action@v3

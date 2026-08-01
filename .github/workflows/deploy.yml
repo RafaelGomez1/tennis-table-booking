@@ -25,6 +25,7 @@ jobs:
           SHA: ${{ github.sha }}
         run: >
           ./gradlew jib --image=rafagomezp/tt-sant-andreu
+          -Dorg.gradle.java.home=$JAVA_HOME
           -Djib.from.image=amazoncorretto:21
           -Djib.to.tags=${SHA}
           -Djib.to.auth.username=${{ secrets.DOCKERHUB_USER }}

@@ -76,6 +76,15 @@ sealed class MemberType {
         }
 
     companion object {
+        fun fromFilter(value: String): MemberType? =
+            when (value.uppercase()) {
+                "CASUAL" -> Casual
+                "ACADEMY_BEGINNER" -> AcademyBeginner(AcademyGroup.MONDAY_6_7)
+                "ACADEMY_INTERMEDIATE" -> AcademyIntermediate
+                "COMPETITION" -> Competition(Team.TWO_A)
+                else -> null
+            }
+
         fun fromString(value: String, academyGroup: String? = null, team: String? = null): MemberType =
             when (value.uppercase()) {
                 "CASUAL" -> Casual

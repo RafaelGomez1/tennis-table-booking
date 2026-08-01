@@ -47,14 +47,7 @@ internal fun Member.toDocument(): MemberDocument = MemberDocument(
     name = name.value,
     surname = surname.value,
     phoneNumbers = phoneNumbers.values.map { it.value },
-    type = type.toDocumentType(),
+    type = type.toName(),
     academyGroup = (type as? MemberType.AcademyBeginner)?.group?.name,
     team = (type as? MemberType.Competition)?.team?.name
 )
-
-internal fun MemberType.toDocumentType(): String = when (this) {
-    is MemberType.Casual -> "CASUAL"
-    is MemberType.AcademyBeginner -> "ACADEMY_BEGINNER"
-    is MemberType.AcademyIntermediate -> "ACADEMY_INTERMEDIATE"
-    is MemberType.Competition -> "COMPETITION"
-}

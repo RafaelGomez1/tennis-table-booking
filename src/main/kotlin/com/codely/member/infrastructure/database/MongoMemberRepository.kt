@@ -13,7 +13,6 @@ import com.codely.member.domain.Page
 import com.codely.member.domain.PageRequest
 import com.codely.member.infrastructure.database.document.JpaMemberRepository
 import com.codely.member.infrastructure.database.document.toDocument
-import com.codely.member.infrastructure.database.document.toDocumentType
 import com.codely.shared.dispatcher.withIOContext
 import kotlinx.coroutines.flow.toList
 import org.springframework.stereotype.Component
@@ -39,7 +38,7 @@ class MongoMemberRepository(private val repository: JpaMemberRepository) : Membe
             val allDocuments = when (criteria) {
                 is All -> repository.findAll().toList()
                 is ByGroup -> repository.findAllByType("ACADEMY_BEGINNER")
-                is ByType -> repository.findAllByType(criteria.type.toDocumentType())
+                is ByType -> repository.findAllByType(criteria.type.toName())
             }
             val totalElements = allDocuments.size.toLong()
             val offset = pageRequest.page * pageRequest.size

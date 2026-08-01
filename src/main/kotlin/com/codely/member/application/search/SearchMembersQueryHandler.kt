@@ -11,7 +11,7 @@ import com.codely.member.domain.PageRequest
 
 context(MemberRepository, Raise<SearchMembersError>)
 suspend fun handle(query: SearchMembersQuery): Page<Member> {
-    val memberType = query.type?.let { MemberType.fromString(it) ?: raise(SearchMembersError.InvalidType) }
+    val memberType = query.type?.let { MemberType.fromFilter(it) ?: raise(SearchMembersError.InvalidType) }
     val criteria = memberType?.let { MemberSearchByCriteria.ByType(it) } ?: All
     val pageRequest = PageRequest(page = query.page, size = query.size)
 

@@ -70,7 +70,6 @@ class LeagueRankingUpdater(
             ?: playerRepository.find(ByClubAndName(ClubName(club), playerName))
     }
 
-
     private fun createRankedPlayerFromData(input: String, club: String, playerName: String, clubs: List<String>): RankedPlayer {
         val updatedInput = input.formatInput(clubs)
         val elements = updatedInput.split(" ")

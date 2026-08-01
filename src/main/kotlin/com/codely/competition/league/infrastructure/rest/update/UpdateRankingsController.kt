@@ -13,7 +13,6 @@ import com.codely.shared.config.CompetitionConfig
 import com.codely.shared.response.Response
 import com.codely.shared.response.withoutBody
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.springframework.http.HttpStatus.ACCEPTED

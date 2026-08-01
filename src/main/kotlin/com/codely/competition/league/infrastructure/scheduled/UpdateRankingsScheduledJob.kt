@@ -10,7 +10,6 @@ import com.codely.competition.league.domain.LeagueName.SEGUNDA_B
 import com.codely.competition.league.domain.LeagueName.TERCERA_A
 import com.codely.competition.league.domain.LeagueName.TERCERA_B
 import com.codely.shared.config.CompetitionConfig
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper

@@ -55,6 +55,7 @@ tasks.withType<Test> {
         afterSuite(printTestResult)
     }
     useJUnitPlatform()
+    environment("DOCKER_API_VERSION", "1.44")
 }
 
 val printTestResult: KotlinClosure2<TestDescriptor, TestResult, Void>
@@ -75,7 +76,7 @@ val printTestResult: KotlinClosure2<TestDescriptor, TestResult, Void>
     })
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.11"
 }
 
 tasks.jacocoTestReport {
@@ -136,6 +137,11 @@ dependencies {
     // Coroutines
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 
+    // Testcontainers
+    testImplementation("org.testcontainers:testcontainers:1.20.4")
+    testImplementation("org.testcontainers:mongodb:1.20.4")
+    testImplementation("org.testcontainers:junit-jupiter:1.20.4")
+
     // test fixtures dependencies
     testFixturesImplementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 }
@@ -149,13 +155,13 @@ tasks.withType<KotlinCompile> {
             "-Xmx256m",
             "-Xss256k",
             "-XX:MaxMetaspaceSize=128m",
-            "-XX:+UseG1GC",                             // Default GC: G1GC
-            "-XX:MaxGCPauseMillis=200",                 // Reduce pause times during GC
-            "-XX:+ExplicitGCInvokesConcurrent",         // Enable concurrent explicit GC
-            "-XX:MaxRAMPercentage=50.0",                // Limit JVM heap to 50% of available memory
-            "-XX:+UseContainerSupport",                 // Enable container awareness
-            "-XX:InitialRAMPercentage=25.0",            // Start with 25% of available memory
-            "-XX:MaxMetaspaceSize=128m"                 // Limit metaspace memory usage
+            "-XX:+UseG1GC", // Default GC: G1GC
+            "-XX:MaxGCPauseMillis=200", // Reduce pause times during GC
+            "-XX:+ExplicitGCInvokesConcurrent", // Enable concurrent explicit GC
+            "-XX:MaxRAMPercentage=50.0", // Limit JVM heap to 50% of available memory
+            "-XX:+UseContainerSupport", // Enable container awareness
+            "-XX:InitialRAMPercentage=25.0", // Start with 25% of available memory
+            "-XX:MaxMetaspaceSize=128m" // Limit metaspace memory usage
         )
         jvmTarget = "21"
     }

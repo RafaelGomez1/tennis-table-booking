@@ -13,7 +13,7 @@ class CorsConfig {
     fun corsWebFilter(): CorsWebFilter {
         val config = CorsConfiguration().apply {
             allowedOriginPatterns = listOf("*")
-            allowedMethods = listOf("GET", "POST", "PATCH", "DELETE", "OPTIONS")
+            allowedMethods = listOf("GET", "POST", "PATCH", "DELETE", "OPTIONS", "PUT")
             allowedHeaders = listOf("*")
             allowCredentials = true
         }

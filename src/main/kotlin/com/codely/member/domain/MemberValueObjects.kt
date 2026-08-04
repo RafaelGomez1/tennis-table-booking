@@ -146,3 +146,17 @@ data class MemberDateOfBirth(val value: LocalDate) {
 }
 
 data class MemberSince(val value: LocalDate)
+
+enum class AgeGroup {
+    KIDS,
+    SENIORS,
+    RETIRED;
+
+    companion object {
+        fun fromAge(age: Int): AgeGroup = when {
+            age < 18 -> KIDS
+            age <= 65 -> SENIORS
+            else -> RETIRED
+        }
+    }
+}

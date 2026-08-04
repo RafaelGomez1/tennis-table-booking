@@ -1,5 +1,6 @@
 package com.codely.member
 
+import com.codely.member.domain.AgeGroup
 import com.codely.member.domain.ContactPhoneNumbers
 import com.codely.member.domain.IDNumber
 import com.codely.member.domain.Member
@@ -30,7 +31,8 @@ object MemberMother {
         postalCode: MemberPostalCode? = null,
         dateOfBirth: MemberDateOfBirth? = null,
         email: MemberEmail? = null,
-        memberSince: MemberSince? = null
+        memberSince: MemberSince? = null,
+        ageGroup: AgeGroup? = null
     ): Member = Member(
         id = id,
         name = name,
@@ -44,7 +46,8 @@ object MemberMother {
         postalCode = postalCode,
         dateOfBirth = dateOfBirth,
         email = email,
-        memberSince = memberSince
+        memberSince = memberSince,
+        ageGroup = ageGroup
     )
 
     fun casual(

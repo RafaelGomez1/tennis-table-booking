@@ -1,6 +1,7 @@
 package com.codely.member.infrastructure.database.document
 
 import com.codely.member.domain.AcademyGroup
+import com.codely.member.domain.AgeGroup
 import com.codely.member.domain.ContactPhoneNumber
 import com.codely.member.domain.ContactPhoneNumbers
 import com.codely.member.domain.IDNumber
@@ -39,24 +40,32 @@ class MemberDocument(
     val postalCode: String? = null,
     val dateOfBirth: String? = null,
     val email: String? = null,
-    val memberSince: String? = null
+    val memberSince: String? = null,
+    val ageGroup: String? = null
 ) {
 
-    fun toMember(): Member = Member(
-        id = MemberId(UUID.fromString(id)),
-        name = MemberName(name),
-        surname = MemberSurname(surname),
-        phoneNumbers = ContactPhoneNumbers(phoneNumbers.map { ContactPhoneNumber(it) }),
-        type = toMemberType(),
-        memberCode = memberCode?.let { MemberCode(it) },
-        idNumber = idNumber?.let { IDNumber(it) },
-        address = address?.let { MemberAddress(it) },
-        city = city?.let { MemberCity(it) },
-        postalCode = postalCode?.let { MemberPostalCode(it) },
-        dateOfBirth = dateOfBirth?.let { MemberDateOfBirth(LocalDate.parse(it)) },
-        email = email?.let { MemberEmail(it) },
-        memberSince = memberSince?.let { MemberSince(LocalDate.parse(it)) }
-    )
+    fun toMember(): Member {
+        val dateOfBirth = dateOfBirth?.let { MemberDateOfBirth(LocalDate.parse(it)) }
+        val resolvedAgeGroup = ageGroup?.let { AgeGroup.valueOf(it) }
+            ?: dateOfBirth?.age()?.let { AgeGroup.fromAge(it) }
+
+        return Member(
+            id = MemberId(UUID.fromString(id)),
+            name = MemberName(name),
+            surname = MemberSurname(surname),
+            phoneNumbers = ContactPhoneNumbers(phoneNumbers.map { ContactPhoneNumber(it) }),
+            type = toMemberType(),
+            memberCode = memberCode?.let { MemberCode(it) },
+            idNumber = idNumber?.let { IDNumber(it) },
+            address = address?.let { MemberAddress(it) },
+            city = city?.let { MemberCity(it) },
+            postalCode = postalCode?.let { MemberPostalCode(it) },
+            dateOfBirth = dateOfBirth,
+            email = email?.let { MemberEmail(it) },
+            memberSince = memberSince?.let { MemberSince(LocalDate.parse(it)) },
+            ageGroup = resolvedAgeGroup
+        )
+    }
 
     private fun toMemberType(): MemberType = when (type) {
         "CASUAL" -> MemberType.Casual
@@ -82,5 +91,6 @@ internal fun Member.toDocument(): MemberDocument = MemberDocument(
     postalCode = postalCode?.value,
     dateOfBirth = dateOfBirth?.value?.toString(),
     email = email?.value,
-    memberSince = memberSince?.value?.toString()
+    memberSince = memberSince?.value?.toString(),
+    ageGroup = resolvedAgeGroup()?.name
 )

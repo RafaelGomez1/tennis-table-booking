@@ -19,7 +19,8 @@ data class MemberResponseDTO(
     val dateOfBirth: String?,
     val email: String?,
     val memberSince: String?,
-    val age: Int?
+    val age: Int?,
+    val ageGroup: String?
 ) {
     companion object {
         fun fromDomain(member: Member): MemberResponseDTO =
@@ -39,7 +40,8 @@ data class MemberResponseDTO(
                 dateOfBirth = member.dateOfBirth?.value?.toString(),
                 email = member.email?.value,
                 memberSince = member.memberSince?.value?.toString(),
-                age = member.age
+                age = member.age,
+                ageGroup = member.resolvedAgeGroup()?.name
             )
 
         fun fromDomain(page: Page<Member>): PageDTO<MemberResponseDTO> =

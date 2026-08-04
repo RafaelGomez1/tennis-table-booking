@@ -13,9 +13,12 @@ data class Member(
     val postalCode: MemberPostalCode? = null,
     val dateOfBirth: MemberDateOfBirth? = null,
     val email: MemberEmail? = null,
-    val memberSince: MemberSince? = null
+    val memberSince: MemberSince? = null,
+    val ageGroup: AgeGroup? = null
 ) {
     val age: Int? get() = dateOfBirth?.age()
+
+    fun resolvedAgeGroup(): AgeGroup? = ageGroup ?: age?.let { AgeGroup.fromAge(it) }
 
     companion object {
         fun create(

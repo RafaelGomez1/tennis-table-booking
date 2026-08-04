@@ -9,7 +9,6 @@ import com.codely.member.application.update.UpdateMemberError.InvalidSurname
 import com.codely.member.application.update.UpdateMemberError.InvalidType
 import com.codely.member.application.update.UpdateMemberError.InvalidUUID
 import com.codely.member.application.update.UpdateMemberError.MemberNotFound
-import com.codely.member.application.update.UpdateMemberError.InvalidMemberCode
 import com.codely.member.application.update.UpdateMemberError.InvalidIDNumber
 import com.codely.member.application.update.UpdateMemberError.InvalidAddress
 import com.codely.member.application.update.UpdateMemberError.InvalidCity
@@ -58,7 +57,6 @@ class UpdateMemberController(
                                 type = body.type,
                                 academyGroup = body.academyGroup,
                                 team = body.team,
-                                memberCode = body.memberCode,
                                 idNumber = body.idNumber,
                                 address = body.address,
                                 city = body.city,
@@ -83,7 +81,6 @@ class UpdateMemberController(
             is InvalidSurname -> Response.status(BAD_REQUEST).withBody(INVALID_SURNAME)
             is InvalidPhoneNumbers -> Response.status(BAD_REQUEST).withBody(INVALID_PHONE_NUMBERS)
             is InvalidType -> Response.status(BAD_REQUEST).withBody(INVALID_TYPE)
-            is InvalidMemberCode -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
             is InvalidIDNumber -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
             is InvalidAddress -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
             is InvalidCity -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)

@@ -6,7 +6,6 @@ import com.codely.member.domain.ContactPhoneNumbers
 import com.codely.member.domain.IDNumber
 import com.codely.member.domain.MemberAddress
 import com.codely.member.domain.MemberCity
-import com.codely.member.domain.MemberCode
 import com.codely.member.domain.MemberDateOfBirth
 import com.codely.member.domain.MemberEmail
 import com.codely.member.domain.MemberId
@@ -61,10 +60,6 @@ object ContactPhoneNumbersMother {
 
     fun single(): ContactPhoneNumbers =
         ContactPhoneNumbers.of(ContactPhoneNumber("6${(10000000..99999999).random()}"))
-}
-
-object MemberCodeMother {
-    fun random(): MemberCode = MemberCode("MC-${(1000..9999).random()}")
 }
 
 object IDNumberMother {

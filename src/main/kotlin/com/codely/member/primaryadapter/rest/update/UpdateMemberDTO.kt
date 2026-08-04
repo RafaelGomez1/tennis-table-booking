@@ -15,8 +15,6 @@ data class UpdateMemberDTO(
     val academyGroup: String? = null,
     @JsonProperty("team")
     val team: String? = null,
-    @JsonProperty("memberCode")
-    val memberCode: String? = null,
     @JsonProperty("idNumber")
     val idNumber: String? = null,
     @JsonProperty("address")

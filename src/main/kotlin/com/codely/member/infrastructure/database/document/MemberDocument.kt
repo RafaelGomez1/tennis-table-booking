@@ -8,7 +8,6 @@ import com.codely.member.domain.IDNumber
 import com.codely.member.domain.Member
 import com.codely.member.domain.MemberAddress
 import com.codely.member.domain.MemberCity
-import com.codely.member.domain.MemberCode
 import com.codely.member.domain.MemberDateOfBirth
 import com.codely.member.domain.MemberEmail
 import com.codely.member.domain.MemberId
@@ -33,7 +32,6 @@ class MemberDocument(
     val type: String,
     val academyGroup: String? = null,
     val team: String? = null,
-    val memberCode: String? = null,
     val idNumber: String? = null,
     val address: String? = null,
     val city: String? = null,
@@ -55,7 +53,6 @@ class MemberDocument(
             surname = MemberSurname(surname),
             phoneNumbers = ContactPhoneNumbers(phoneNumbers.map { ContactPhoneNumber(it) }),
             type = toMemberType(),
-            memberCode = memberCode?.let { MemberCode(it) },
             idNumber = idNumber?.let { IDNumber(it) },
             address = address?.let { MemberAddress(it) },
             city = city?.let { MemberCity(it) },
@@ -84,7 +81,6 @@ internal fun Member.toDocument(): MemberDocument = MemberDocument(
     type = type.toName(),
     academyGroup = (type as? MemberType.AcademyBeginner)?.group?.name,
     team = (type as? MemberType.Competition)?.team?.name,
-    memberCode = memberCode?.value,
     idNumber = idNumber?.value,
     address = address?.value,
     city = city?.value,

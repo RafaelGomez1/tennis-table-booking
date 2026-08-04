@@ -7,7 +7,6 @@ import com.codely.member.domain.IDNumber
 import com.codely.member.domain.Member
 import com.codely.member.domain.MemberAddress
 import com.codely.member.domain.MemberCity
-import com.codely.member.domain.MemberCode
 import com.codely.member.domain.MemberDateOfBirth
 import com.codely.member.domain.MemberEmail
 import com.codely.member.domain.MemberFindByCriteria.ById
@@ -26,7 +25,6 @@ suspend fun updateMember(
     surname: MemberSurname,
     phoneNumbers: ContactPhoneNumbers,
     type: MemberType,
-    memberCode: MemberCode? = null,
     idNumber: IDNumber? = null,
     address: MemberAddress? = null,
     city: MemberCity? = null,
@@ -43,7 +41,6 @@ suspend fun updateMember(
         surname = surname,
         phoneNumbers = phoneNumbers,
         type = type,
-        memberCode = memberCode,
         idNumber = idNumber,
         address = address,
         city = city,

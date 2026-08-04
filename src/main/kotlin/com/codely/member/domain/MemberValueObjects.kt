@@ -99,13 +99,6 @@ sealed class MemberType {
 }
 
 @JvmInline
-value class MemberCode(val value: String) {
-    init {
-        require(value.isNotBlank()) { "Member code cannot be blank" }
-    }
-}
-
-@JvmInline
 value class IDNumber(val value: String) {
     init {
         require(value.isNotBlank()) { "ID number cannot be blank" }

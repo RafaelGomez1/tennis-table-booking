@@ -7,7 +7,6 @@ import com.codely.member.domain.ContactPhoneNumbers
 import com.codely.member.domain.IDNumber
 import com.codely.member.domain.MemberAddress
 import com.codely.member.domain.MemberCity
-import com.codely.member.domain.MemberCode
 import com.codely.member.domain.MemberDateOfBirth
 import com.codely.member.domain.MemberEmail
 import com.codely.member.domain.MemberId
@@ -29,7 +28,6 @@ suspend fun handle(command: UpdateMemberCommand) {
         ContactPhoneNumbers(command.phoneNumbers.map { ContactPhoneNumber(it) })
     }) { raise(UpdateMemberError.InvalidPhoneNumbers) }
     val type = catch({ MemberType.fromString(command.type, command.academyGroup, command.team) }) { raise(UpdateMemberError.InvalidType) }
-    val memberCode = command.memberCode?.let { catch({ MemberCode(it) }) { raise(UpdateMemberError.InvalidMemberCode) } }
     val idNumber = command.idNumber?.let { catch({ IDNumber(it) }) { raise(UpdateMemberError.InvalidIDNumber) } }
     val address = command.address?.let { catch({ MemberAddress(it) }) { raise(UpdateMemberError.InvalidAddress) } }
     val city = command.city?.let { catch({ MemberCity(it) }) { raise(UpdateMemberError.InvalidCity) } }
@@ -44,7 +42,6 @@ suspend fun handle(command: UpdateMemberCommand) {
         surname = surname,
         phoneNumbers = phoneNumbers,
         type = type,
-        memberCode = memberCode,
         idNumber = idNumber,
         address = address,
         city = city,
@@ -63,7 +60,6 @@ data class UpdateMemberCommand(
     val type: String,
     val academyGroup: String? = null,
     val team: String? = null,
-    val memberCode: String? = null,
     val idNumber: String? = null,
     val address: String? = null,
     val city: String? = null,
@@ -80,7 +76,6 @@ sealed class UpdateMemberError {
     data object InvalidSurname : UpdateMemberError()
     data object InvalidPhoneNumbers : UpdateMemberError()
     data object InvalidType : UpdateMemberError()
-    data object InvalidMemberCode : UpdateMemberError()
     data object InvalidIDNumber : UpdateMemberError()
     data object InvalidAddress : UpdateMemberError()
     data object InvalidCity : UpdateMemberError()

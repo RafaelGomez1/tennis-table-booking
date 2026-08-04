@@ -8,7 +8,6 @@ import com.codely.member.application.register.RegisterMemberError.InvalidPhoneNu
 import com.codely.member.application.register.RegisterMemberError.InvalidSurname
 import com.codely.member.application.register.RegisterMemberError.InvalidType
 import com.codely.member.application.register.RegisterMemberError.InvalidUUID
-import com.codely.member.application.register.RegisterMemberError.InvalidMemberCode
 import com.codely.member.application.register.RegisterMemberError.InvalidIDNumber
 import com.codely.member.application.register.RegisterMemberError.InvalidAddress
 import com.codely.member.application.register.RegisterMemberError.InvalidCity
@@ -55,7 +54,6 @@ class RegisterMemberController(
                                 type = body.type,
                                 academyGroup = body.academyGroup,
                                 team = body.team,
-                                memberCode = body.memberCode,
                                 idNumber = body.idNumber,
                                 address = body.address,
                                 city = body.city,
@@ -79,7 +77,6 @@ class RegisterMemberController(
             is InvalidSurname -> Response.status(BAD_REQUEST).withBody(INVALID_SURNAME)
             is InvalidPhoneNumbers -> Response.status(BAD_REQUEST).withBody(INVALID_PHONE_NUMBERS)
             is InvalidType -> Response.status(BAD_REQUEST).withBody(INVALID_TYPE)
-            is InvalidMemberCode -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
             is InvalidIDNumber -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
             is InvalidAddress -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
             is InvalidCity -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)

@@ -8,7 +8,6 @@ import com.codely.member.domain.IDNumber
 import com.codely.member.domain.Member
 import com.codely.member.domain.MemberAddress
 import com.codely.member.domain.MemberCity
-import com.codely.member.domain.MemberCode
 import com.codely.member.domain.MemberDateOfBirth
 import com.codely.member.domain.MemberEmail
 import com.codely.member.domain.MemberId
@@ -30,7 +29,6 @@ suspend fun handle(command: RegisterMemberCommand) {
         ContactPhoneNumbers(command.phoneNumbers.map { ContactPhoneNumber(it) })
     }) { raise(RegisterMemberError.InvalidPhoneNumbers) }
     val type = command.toMemberType()
-    val memberCode = command.memberCode?.let { catch({ MemberCode(it) }) { raise(RegisterMemberError.InvalidMemberCode) } }
     val idNumber = command.idNumber?.let { catch({ IDNumber(it) }) { raise(RegisterMemberError.InvalidIDNumber) } }
     val address = command.address?.let { catch({ MemberAddress(it) }) { raise(RegisterMemberError.InvalidAddress) } }
     val city = command.city?.let { catch({ MemberCity(it) }) { raise(RegisterMemberError.InvalidCity) } }
@@ -45,7 +43,6 @@ suspend fun handle(command: RegisterMemberCommand) {
         surname = surname,
         phoneNumbers = phoneNumbers,
         type = type,
-        memberCode = memberCode,
         idNumber = idNumber,
         address = address,
         city = city,
@@ -72,7 +69,6 @@ data class RegisterMemberCommand(
     val type: String,
     val academyGroup: String? = null,
     val team: String? = null,
-    val memberCode: String? = null,
     val idNumber: String? = null,
     val address: String? = null,
     val city: String? = null,
@@ -88,7 +84,6 @@ sealed class RegisterMemberError {
     data object InvalidSurname : RegisterMemberError()
     data object InvalidPhoneNumbers : RegisterMemberError()
     data object InvalidType : RegisterMemberError()
-    data object InvalidMemberCode : RegisterMemberError()
     data object InvalidIDNumber : RegisterMemberError()
     data object InvalidAddress : RegisterMemberError()
     data object InvalidCity : RegisterMemberError()

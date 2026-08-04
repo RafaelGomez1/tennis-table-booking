@@ -10,7 +10,16 @@ data class MemberResponseDTO(
     val phoneNumbers: List<String>,
     val type: String,
     val academyGroup: String?,
-    val team: String?
+    val team: String?,
+    val memberCode: String?,
+    val idNumber: String?,
+    val address: String?,
+    val city: String?,
+    val postalCode: String?,
+    val dateOfBirth: String?,
+    val email: String?,
+    val memberSince: String?,
+    val age: Int?
 ) {
     companion object {
         fun fromDomain(member: Member): MemberResponseDTO =
@@ -21,7 +30,16 @@ data class MemberResponseDTO(
                 phoneNumbers = member.phoneNumbers.values.map { it.value },
                 type = member.type.toName(),
                 academyGroup = member.type.academyGroup(),
-                team = member.type.team()
+                team = member.type.team(),
+                memberCode = member.memberCode?.value,
+                idNumber = member.idNumber?.value,
+                address = member.address?.value,
+                city = member.city?.value,
+                postalCode = member.postalCode?.value,
+                dateOfBirth = member.dateOfBirth?.value?.toString(),
+                email = member.email?.value,
+                memberSince = member.memberSince?.value?.toString(),
+                age = member.age
             )
 
         fun fromDomain(page: Page<Member>): PageDTO<MemberResponseDTO> =

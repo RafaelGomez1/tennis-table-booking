@@ -1,5 +1,7 @@
 package com.codely.member.domain
 
+import java.time.LocalDate
+import java.time.Period
 import java.util.UUID
 
 @JvmInline
@@ -95,3 +97,52 @@ sealed class MemberType {
             }
     }
 }
+
+@JvmInline
+value class MemberCode(val value: String) {
+    init {
+        require(value.isNotBlank()) { "Member code cannot be blank" }
+    }
+}
+
+@JvmInline
+value class IDNumber(val value: String) {
+    init {
+        require(value.isNotBlank()) { "ID number cannot be blank" }
+    }
+}
+
+@JvmInline
+value class MemberAddress(val value: String) {
+    init {
+        require(value.isNotBlank()) { "Address cannot be blank" }
+    }
+}
+
+@JvmInline
+value class MemberCity(val value: String) {
+    init {
+        require(value.isNotBlank()) { "City cannot be blank" }
+    }
+}
+
+@JvmInline
+value class MemberPostalCode(val value: String) {
+    init {
+        require(value.isNotBlank()) { "Postal code cannot be blank" }
+    }
+}
+
+@JvmInline
+value class MemberEmail(val value: String) {
+    init {
+        require(value.isNotBlank()) { "Email cannot be blank" }
+        require(value.contains("@")) { "Email must contain @" }
+    }
+}
+
+data class MemberDateOfBirth(val value: LocalDate) {
+    fun age(): Int = Period.between(value, LocalDate.now()).years
+}
+
+data class MemberSince(val value: LocalDate)

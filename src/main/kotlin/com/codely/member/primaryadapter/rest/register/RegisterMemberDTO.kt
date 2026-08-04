@@ -14,5 +14,21 @@ data class RegisterMemberDTO(
     @JsonProperty("academyGroup")
     val academyGroup: String? = null,
     @JsonProperty("team")
-    val team: String? = null
+    val team: String? = null,
+    @JsonProperty("memberCode")
+    val memberCode: String? = null,
+    @JsonProperty("idNumber")
+    val idNumber: String? = null,
+    @JsonProperty("address")
+    val address: String? = null,
+    @JsonProperty("city")
+    val city: String? = null,
+    @JsonProperty("postalCode")
+    val postalCode: String? = null,
+    @JsonProperty("dateOfBirth")
+    val dateOfBirth: String? = null,
+    @JsonProperty("email")
+    val email: String? = null,
+    @JsonProperty("memberSince")
+    val memberSince: String? = null
 )

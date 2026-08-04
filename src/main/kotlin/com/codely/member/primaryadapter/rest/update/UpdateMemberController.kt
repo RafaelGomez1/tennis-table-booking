@@ -9,6 +9,14 @@ import com.codely.member.application.update.UpdateMemberError.InvalidSurname
 import com.codely.member.application.update.UpdateMemberError.InvalidType
 import com.codely.member.application.update.UpdateMemberError.InvalidUUID
 import com.codely.member.application.update.UpdateMemberError.MemberNotFound
+import com.codely.member.application.update.UpdateMemberError.InvalidMemberCode
+import com.codely.member.application.update.UpdateMemberError.InvalidIDNumber
+import com.codely.member.application.update.UpdateMemberError.InvalidAddress
+import com.codely.member.application.update.UpdateMemberError.InvalidCity
+import com.codely.member.application.update.UpdateMemberError.InvalidPostalCode
+import com.codely.member.application.update.UpdateMemberError.InvalidDateOfBirth
+import com.codely.member.application.update.UpdateMemberError.InvalidEmail
+import com.codely.member.application.update.UpdateMemberError.InvalidMemberSince
 import com.codely.member.application.update.handle
 import com.codely.member.domain.MemberRepository
 import com.codely.member.primaryadapter.rest.error.MemberServerErrors.INVALID_IDENTIFIERS
@@ -17,6 +25,7 @@ import com.codely.member.primaryadapter.rest.error.MemberServerErrors.INVALID_PH
 import com.codely.member.primaryadapter.rest.error.MemberServerErrors.INVALID_SURNAME
 import com.codely.member.primaryadapter.rest.error.MemberServerErrors.INVALID_TYPE
 import com.codely.member.primaryadapter.rest.error.MemberServerErrors.MEMBER_NOT_FOUND
+import com.codely.member.primaryadapter.rest.error.MemberServerErrors.INVALID_MEMBER_DATA
 import com.codely.shared.cors.BaseController
 import com.codely.shared.response.Response
 import com.codely.shared.response.withBody
@@ -48,7 +57,15 @@ class UpdateMemberController(
                                 phoneNumbers = body.phoneNumbers,
                                 type = body.type,
                                 academyGroup = body.academyGroup,
-                                team = body.team
+                                team = body.team,
+                                memberCode = body.memberCode,
+                                idNumber = body.idNumber,
+                                address = body.address,
+                                city = body.city,
+                                postalCode = body.postalCode,
+                                dateOfBirth = body.dateOfBirth,
+                                email = body.email,
+                                memberSince = body.memberSince
                             )
                         )
                     },
@@ -66,5 +83,13 @@ class UpdateMemberController(
             is InvalidSurname -> Response.status(BAD_REQUEST).withBody(INVALID_SURNAME)
             is InvalidPhoneNumbers -> Response.status(BAD_REQUEST).withBody(INVALID_PHONE_NUMBERS)
             is InvalidType -> Response.status(BAD_REQUEST).withBody(INVALID_TYPE)
+            is InvalidMemberCode -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
+            is InvalidIDNumber -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
+            is InvalidAddress -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
+            is InvalidCity -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
+            is InvalidPostalCode -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
+            is InvalidDateOfBirth -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
+            is InvalidEmail -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
+            is InvalidMemberSince -> Response.status(BAD_REQUEST).withBody(INVALID_MEMBER_DATA)
         }
 }

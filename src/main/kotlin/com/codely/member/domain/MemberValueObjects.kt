@@ -48,20 +48,21 @@ enum class AcademyGroup(val day: String, val from: Int, val to: Int) {
     MONDAY_6_7("Monday", 18, 19),
     MONDAY_7_8("Monday", 19, 20),
     WEDNESDAY_6_7("Wednesday", 18, 19),
-    WEDNESDAY_7_8("Wednesday", 19, 20)
+    WEDNESDAY_7_8("Wednesday", 19, 20),
+    FRIDAY_6_7("Friday", 18, 19),
 }
 
 enum class Team { TWO_A, THREE_B }
 
 sealed class MemberType {
     data object Casual : MemberType()
-    data class AcademyBeginner(val group: AcademyGroup) : MemberType()
+    data class AcademyBeginner(val groups: List<AcademyGroup>) : MemberType()
     data object AcademyIntermediate : MemberType()
     data class Competition(val team: Team) : MemberType()
 
-    fun academyGroup(): String? = when (this) {
-        is AcademyBeginner -> group.name
-        else -> null
+    fun academyGroups(): List<String> = when (this) {
+        is AcademyBeginner -> groups.map { it.name }
+        else -> emptyList()
     }
 
     fun team(): String? = when (this) {
@@ -81,16 +82,16 @@ sealed class MemberType {
         fun fromFilter(value: String): MemberType? =
             when (value.uppercase()) {
                 "CASUAL" -> Casual
-                "ACADEMY_BEGINNER" -> AcademyBeginner(AcademyGroup.MONDAY_6_7)
+                "ACADEMY_BEGINNER" -> AcademyBeginner(listOf(AcademyGroup.MONDAY_6_7))
                 "ACADEMY_INTERMEDIATE" -> AcademyIntermediate
                 "COMPETITION" -> Competition(Team.TWO_A)
                 else -> null
             }
 
-        fun fromString(value: String, academyGroup: String? = null, team: String? = null): MemberType =
+        fun fromString(value: String, academyGroups: List<String>? = null, team: String? = null): MemberType =
             when (value.uppercase()) {
                 "CASUAL" -> Casual
-                "ACADEMY_BEGINNER" -> AcademyBeginner(AcademyGroup.valueOf(academyGroup!!))
+                "ACADEMY_BEGINNER" -> AcademyBeginner(academyGroups!!.map { AcademyGroup.valueOf(it) })
                 "ACADEMY_INTERMEDIATE" -> AcademyIntermediate
                 "COMPETITION" -> Competition(Team.valueOf(team!!))
                 else -> throw IllegalArgumentException("Unknown MemberType: $value")

@@ -52,7 +52,7 @@ class RegisterMemberController(
                                 surname = body.surname,
                                 phoneNumbers = body.phoneNumbers,
                                 type = body.type,
-                                academyGroup = body.academyGroup,
+                                academyGroups = body.academyGroups,
                                 team = body.team,
                                 idNumber = body.idNumber,
                                 address = body.address,

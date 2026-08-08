@@ -26,7 +26,7 @@ object MemberTypeMother {
 
     fun academyBeginner(
         group: AcademyGroup = AcademyGroup.values().random()
-    ): MemberType = MemberType.AcademyBeginner(group)
+    ): MemberType = MemberType.AcademyBeginner(listOf(group))
 
     fun academyIntermediate(): MemberType = MemberType.AcademyIntermediate
 

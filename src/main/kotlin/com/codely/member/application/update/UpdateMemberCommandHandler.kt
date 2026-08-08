@@ -27,7 +27,7 @@ suspend fun handle(command: UpdateMemberCommand) {
     val phoneNumbers = catch({
         ContactPhoneNumbers(command.phoneNumbers.map { ContactPhoneNumber(it) })
     }) { raise(UpdateMemberError.InvalidPhoneNumbers) }
-    val type = catch({ MemberType.fromString(command.type, command.academyGroup, command.team) }) { raise(UpdateMemberError.InvalidType) }
+    val type = catch({ MemberType.fromString(command.type, command.academyGroups, command.team) }) { raise(UpdateMemberError.InvalidType) }
     val idNumber = command.idNumber?.let { catch({ IDNumber(it) }) { raise(UpdateMemberError.InvalidIDNumber) } }
     val address = command.address?.let { catch({ MemberAddress(it) }) { raise(UpdateMemberError.InvalidAddress) } }
     val city = command.city?.let { catch({ MemberCity(it) }) { raise(UpdateMemberError.InvalidCity) } }
@@ -58,7 +58,7 @@ data class UpdateMemberCommand(
     val surname: String,
     val phoneNumbers: List<String>,
     val type: String,
-    val academyGroup: String? = null,
+    val academyGroups: List<String>? = null,
     val team: String? = null,
     val idNumber: String? = null,
     val address: String? = null,

@@ -58,7 +58,7 @@ class RegisterMemberTest {
                 surname = member.surname.value,
                 phoneNumbers = member.phoneNumbers.values.map { it.value },
                 type = "ACADEMY_BEGINNER",
-                academyGroup = type.group.name
+                academyGroups = type.groups.map { it.name }
             )
         )
 

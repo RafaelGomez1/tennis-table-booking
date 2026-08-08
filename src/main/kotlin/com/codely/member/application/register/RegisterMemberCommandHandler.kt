@@ -57,7 +57,7 @@ suspend fun handle(command: RegisterMemberCommand) {
 
 context(Raise<RegisterMemberError>)
 private fun RegisterMemberCommand.toMemberType(): MemberType =
-    catch({ MemberType.fromString(type, academyGroup, team) ?: raise(RegisterMemberError.InvalidType) }) {
+    catch({ MemberType.fromString(type, academyGroups, team) ?: raise(RegisterMemberError.InvalidType) }) {
         raise(RegisterMemberError.InvalidType)
     }
 
@@ -67,7 +67,7 @@ data class RegisterMemberCommand(
     val surname: String,
     val phoneNumbers: List<String>,
     val type: String,
-    val academyGroup: String? = null,
+    val academyGroups: List<String>? = null,
     val team: String? = null,
     val idNumber: String? = null,
     val address: String? = null,

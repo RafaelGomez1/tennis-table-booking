@@ -30,7 +30,7 @@ class MemberDocument(
     val surname: String,
     val phoneNumbers: List<String>,
     val type: String,
-    val academyGroup: String? = null,
+    val academyGroups: List<String> = emptyList(),
     val team: String? = null,
     val idNumber: String? = null,
     val address: String? = null,
@@ -66,7 +66,7 @@ class MemberDocument(
 
     private fun toMemberType(): MemberType = when (type) {
         "CASUAL" -> MemberType.Casual
-        "ACADEMY_BEGINNER" -> MemberType.AcademyBeginner(AcademyGroup.valueOf(academyGroup!!))
+        "ACADEMY_BEGINNER" -> MemberType.AcademyBeginner(academyGroups.map { AcademyGroup.valueOf(it) })
         "ACADEMY_INTERMEDIATE" -> MemberType.AcademyIntermediate
         "COMPETITION" -> MemberType.Competition(Team.valueOf(team!!))
         else -> throw IllegalStateException("Unknown member type: $type")
@@ -79,8 +79,8 @@ internal fun Member.toDocument(): MemberDocument = MemberDocument(
     surname = surname.value,
     phoneNumbers = phoneNumbers.values.map { it.value },
     type = type.toName(),
-    academyGroup = (type as? MemberType.AcademyBeginner)?.group?.name,
-    team = (type as? MemberType.Competition)?.team?.name,
+    academyGroups = type.academyGroups(),
+    team = type.team(),
     idNumber = idNumber?.value,
     address = address?.value,
     city = city?.value,

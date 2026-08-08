@@ -32,7 +32,7 @@ class FakeMemberRepository : MemberRepository, FakeRepository<MemberId, Member> 
             is All -> elements.values.toList()
             is ByGroup -> elements.values.filter {
                 val type = it.type
-                type is MemberType.AcademyBeginner && type.group == criteria.group
+                type is MemberType.AcademyBeginner && type.groups.contains(criteria.group)
             }
             is ByType -> elements.values.filter {
                 it.type::class == criteria.type::class

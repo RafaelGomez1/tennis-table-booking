@@ -39,7 +39,8 @@ class GetCurrentFinanceBalance(
                 breakdown = incomeBreakdown
             ),
             expenses = ExpensesSnapshot(
-                total = totalExpenses
+                total = totalExpenses,
+                breakdown = expensesBreakdown
             )
         )
     }
@@ -101,5 +102,6 @@ data class IncomeSnapshot(
 )
 
 data class ExpensesSnapshot(
-    val total: Int
+    val total: Int,
+    val breakdown: Map<String, Int>
 )

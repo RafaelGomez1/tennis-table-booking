@@ -15,7 +15,8 @@ data class IncomeResponseDTO(
 )
 
 data class ExpensesResponseDTO(
-    val total: Int
+    val total: Int,
+    val breakdown: Map<String, Int>
 )
 
 fun CurrentFinanceSnapshot.toResponseDTO(): CurrentFinanceResponseDTO =
@@ -27,6 +28,7 @@ fun CurrentFinanceSnapshot.toResponseDTO(): CurrentFinanceResponseDTO =
             breakdown = income.breakdown
         ),
         expenses = ExpensesResponseDTO(
-            total = expenses.total
+            total = expenses.total,
+            breakdown = expenses.breakdown
         )
     )

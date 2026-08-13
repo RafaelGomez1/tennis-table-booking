@@ -65,9 +65,9 @@ class MemberDocument(
     }
 
     private fun toMemberType(): Membership = when (type) {
-        "CASUAL" -> Membership.Casual
+        "CASUAL" -> Membership.Casual()
         "ACADEMY_BEGINNER" -> Membership.AcademyBeginner(academyGroups.map { AcademyGroup.valueOf(it) })
-        "ACADEMY_INTERMEDIATE" -> Membership.AcademyIntermediate
+        "ACADEMY_INTERMEDIATE" -> Membership.AcademyIntermediate()
         "COMPETITION" -> Membership.Competition(Team.valueOf(team!!))
         else -> throw IllegalStateException("Unknown member type: $type")
     }

@@ -22,13 +22,13 @@ object MemberTypeMother {
 
     fun random(): Membership = listOf(casual(), academyBeginner(), academyIntermediate(), competition()).random()
 
-    fun casual(): Membership = Membership.Casual
+    fun casual(): Membership = Membership.Casual()
 
     fun academyBeginner(
         group: AcademyGroup = AcademyGroup.values().random()
     ): Membership = Membership.AcademyBeginner(listOf(group))
 
-    fun academyIntermediate(): Membership = Membership.AcademyIntermediate
+    fun academyIntermediate(): Membership = Membership.AcademyIntermediate()
 
     fun competition(
         team: Team = Team.values().random()

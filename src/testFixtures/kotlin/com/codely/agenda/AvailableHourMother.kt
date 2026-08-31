@@ -2,19 +2,19 @@ package com.codely.agenda
 
 import com.codely.agenda.domain.AvailableHour
 import com.codely.agenda.domain.HourType
+import com.codely.agenda.domain.HourType.MEMBERS_TIME
 import com.codely.agenda.domain.MaxCapacity
 import com.codely.agenda.domain.Player
 import java.util.*
-import kotlin.random.Random
 
 object AvailableHourMother {
 
     fun fullPlayerList(
         id: UUID = UUID.randomUUID(),
-        from: Int = Random.nextInt(4, 7),
-        to: Int = Random.nextInt(5, 8),
+        from: Int = 16,
+        to: Int = 17,
         capacity: MaxCapacity = MaxCapacity(8),
-        type: HourType = HourType.values().random(),
+        type: HourType = MEMBERS_TIME,
         players: List<Player> = fullPlayerList
     ) = listOf(AvailableHour(id, from, to, capacity, type, players))
 

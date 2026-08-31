@@ -18,8 +18,12 @@ data class Agenda(
     val month: Month,
     val week: Week,
     val year: Year,
-    val availableHours: List<AvailableHour> = emptyList()
+    var availableHours: List<AvailableHour> = emptyList()
 ) {
+    init {
+        val allowedTimeRanges = AvailableHour.allowedTimeRangesFor(day)
+        availableHours = availableHours.filter { hour -> (hour.from to hour.to) in allowedTimeRanges }
+    }
 
     companion object {
         fun from(day: Day, localDate: LocalDate) =
@@ -93,6 +97,9 @@ data class AvailableHour(
     fun maxCapacityReached() = registeredPlayers.size >= capacity.value
 
     companion object {
+        fun allowedTimeRangesFor(day: Day): Set<Pair<Int, Int>> =
+            fromDay(day).map { hour -> hour.from to hour.to }.toSet()
+
         fun fromDay(day: Day) =
             when (day.dayOfWeek.value) {
                 1 -> monday()

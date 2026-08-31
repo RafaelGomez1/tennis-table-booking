@@ -5,6 +5,7 @@ import com.codely.agenda.domain.AgendaFindByCriteria
 import com.codely.agenda.domain.AgendaFindByCriteria.ById
 import com.codely.agenda.domain.AgendaRepository
 import com.codely.agenda.domain.AgendaSearchByCriteria
+import com.codely.agenda.domain.AgendaSearchByCriteria.ByMonthAndYear
 import com.codely.agenda.domain.AgendaSearchByCriteria.ByWeekAndYear
 import com.codely.shared.fakes.FakeRepository
 import java.util.*
@@ -17,7 +18,8 @@ class FakeAgendaRepository : AgendaRepository, FakeRepository<UUID, Agenda> {
 
     override suspend fun search(criteria: AgendaSearchByCriteria): List<Agenda> =
         when (criteria) {
-            is ByWeekAndYear -> elements.values.filter { el -> el.week == criteria.week }
+            is ByWeekAndYear -> elements.values.filter { el -> el.week == criteria.week && el.year == criteria.year }
+            is ByMonthAndYear -> elements.values.filter { el -> el.month == criteria.month && el.year == criteria.year }
         }
 
     override suspend fun find(criteria: AgendaFindByCriteria): Agenda? =

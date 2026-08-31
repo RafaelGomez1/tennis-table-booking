@@ -5,6 +5,7 @@ import com.codely.agenda.domain.AgendaFindByCriteria
 import com.codely.agenda.domain.AgendaFindByCriteria.ById
 import com.codely.agenda.domain.AgendaRepository
 import com.codely.agenda.domain.AgendaSearchByCriteria
+import com.codely.agenda.domain.AgendaSearchByCriteria.ByMonthAndYear
 import com.codely.agenda.domain.AgendaSearchByCriteria.ByWeekAndYear
 import com.codely.agenda.secondaryadapter.database.document.JpaAgendaRepository
 import com.codely.agenda.secondaryadapter.database.document.toDocument
@@ -24,6 +25,7 @@ class MongoAgendaRepository(private val repository: JpaAgendaRepository) : Agend
         withIOContext {
             when (criteria) {
                 is ByWeekAndYear -> repository.findAllByWeekAndYear(criteria.week, criteria.year)
+                is ByMonthAndYear -> repository.findAllByMonthAndYear(criteria.month.name, criteria.year)
             }.map { document -> document.toAgenda() }
         }
 

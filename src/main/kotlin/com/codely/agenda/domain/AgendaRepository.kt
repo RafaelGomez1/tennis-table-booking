@@ -22,4 +22,5 @@ sealed class AgendaFindByCriteria {
 
 sealed class AgendaSearchByCriteria {
     class ByWeekAndYear(val week: Week, val year: Year) : AgendaSearchByCriteria()
+    class ByMonthAndYear(val month: java.time.Month, val year: Year) : AgendaSearchByCriteria()
 }

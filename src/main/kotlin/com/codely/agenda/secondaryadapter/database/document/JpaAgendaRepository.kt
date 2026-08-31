@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface JpaAgendaRepository : CoroutineCrudRepository<AgendaDocument, String> {
     suspend fun findAllByWeekAndYear(week: Int, year: Int): List<AgendaDocument>
+    suspend fun findAllByMonthAndYear(month: String, year: Int): List<AgendaDocument>
 }

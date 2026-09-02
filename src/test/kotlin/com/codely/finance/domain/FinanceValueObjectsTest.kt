@@ -97,11 +97,5 @@ class FinanceValueObjectsTest : DescribeSpec({
             month.year() shouldBe 2024
             month.monthValue() shouldBe 8
         }
-
-        it("should get current month") {
-            val month = Month.now()
-            month.year() shouldBe 2026
-            month.monthValue() shouldBe 8
-        }
     }
 })

@@ -16,7 +16,7 @@ sealed class CoachingExpenses {
             return Price(weeklyExpense().value * 4)
         }
     }
-    data class IntermediateCoach(val hourlyPrice: Price = Price(18)) : CoachingExpenses() {
+    data class IntermediateCoach(val hourlyPrice: Price = Price(20)) : CoachingExpenses() {
         override fun weeklyExpense(): Price {
             return Price(hourlyPrice.value * 2)
         }
@@ -25,7 +25,7 @@ sealed class CoachingExpenses {
             return Price(weeklyExpense().value * 4)
         }
     }
-    data class CompetitionCoach(val hourlyPrice: Price = Price(18)) : CoachingExpenses() {
+    data class CompetitionCoach(val hourlyPrice: Price = Price(20)) : CoachingExpenses() {
         override fun weeklyExpense(): Price {
             return Price(hourlyPrice.value * 2)
         }

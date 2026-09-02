@@ -1,10 +1,7 @@
 package com.codely.stats.primaryadapter.rest.search
 
 import com.codely.stats.domain.AgendaStats
-import com.codely.stats.domain.OccupancyLevel
 import com.codely.stats.domain.SlotStats
-import java.time.DayOfWeek
-import java.time.Month
 
 data class StatsResponseDTO(
     val month: String,

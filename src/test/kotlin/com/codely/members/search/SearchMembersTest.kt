@@ -54,6 +54,21 @@ class SearchMembersTest {
     }
 
     @Test
+    fun `should filter coach members by type`() = runTest {
+        val coach = MemberMother.coach()
+        val casual = MemberMother.casual()
+        repository.save(coach)
+        repository.save(casual)
+
+        val result = controller.search(type = "COACH", page = 0, size = 20)
+
+        assertEquals(OK, result.statusCode)
+        val page = result.body as PageDTO<*>
+        assertEquals(1L, page.totalElements)
+        assertEquals(MemberResponseDTO.fromDomain(coach), page.content.first())
+    }
+
+    @Test
     fun `should paginate results`() = runTest {
         val member1 = MemberMother.casual()
         val member2 = MemberMother.casual()

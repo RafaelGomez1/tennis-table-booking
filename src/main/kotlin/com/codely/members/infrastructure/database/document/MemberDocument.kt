@@ -69,6 +69,7 @@ class MemberDocument(
         "ACADEMY_BEGINNER" -> Membership.AcademyBeginner(academyGroups.map { AcademyGroup.valueOf(it) })
         "ACADEMY_INTERMEDIATE" -> Membership.AcademyIntermediate()
         "COMPETITION" -> Membership.Competition(Team.valueOf(team!!))
+        "COACH" -> Membership.Coach()
         else -> throw IllegalStateException("Unknown member type: $type")
     }
 }

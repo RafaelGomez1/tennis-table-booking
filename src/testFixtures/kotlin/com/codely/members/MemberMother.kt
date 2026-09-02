@@ -76,4 +76,11 @@ object MemberMother {
         phoneNumbers: ContactPhoneNumbers = ContactPhoneNumbersMother.random(),
         type: Membership = MemberTypeMother.competition()
     ): Member = random(id = id, name = name, surname = surname, phoneNumbers = phoneNumbers, type = type)
+
+    fun coach(
+        id: MemberId = MemberIdMother.random(),
+        name: MemberName = MemberNameMother.random(),
+        surname: MemberSurname = MemberSurnameMother.random(),
+        phoneNumbers: ContactPhoneNumbers = ContactPhoneNumbersMother.random()
+    ): Member = random(id = id, name = name, surname = surname, phoneNumbers = phoneNumbers, type = MemberTypeMother.coach())
 }

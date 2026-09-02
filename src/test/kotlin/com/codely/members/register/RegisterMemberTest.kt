@@ -87,6 +87,24 @@ class RegisterMemberTest {
     }
 
     @Test
+    fun `should register a coach member`() = runTest {
+        val member = MemberMother.coach()
+
+        val result = controller.register(
+            member.id.value.toString(),
+            RegisterMemberDTO(
+                name = member.name.value,
+                surname = member.surname.value,
+                phoneNumbers = member.phoneNumbers.values.map { it.value },
+                type = "COACH"
+            )
+        )
+
+        assertEquals(CREATED, result.statusCode)
+        repository.assertContains(member)
+    }
+
+    @Test
     fun `should fail if id is not a valid UUID`() = runTest {
         val result = controller.register(
             "not-a-uuid",

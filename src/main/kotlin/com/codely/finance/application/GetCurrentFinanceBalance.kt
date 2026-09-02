@@ -9,6 +9,7 @@ import com.codely.members.domain.MemberSearchByCriteria
 import com.codely.members.domain.Membership.AcademyBeginner
 import com.codely.members.domain.Membership.AcademyIntermediate
 import com.codely.members.domain.Membership.Casual
+import com.codely.members.domain.Membership.Coach
 import com.codely.members.domain.Membership.Competition
 import com.codely.members.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -72,6 +73,7 @@ class GetCurrentFinanceBalance(
                     breakdown["competition"] =
                         breakdown["competition"]!! + member.type.membership().value
                 }
+                is Coach -> {}
             }
         }
 

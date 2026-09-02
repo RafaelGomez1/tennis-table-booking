@@ -20,7 +20,7 @@ import java.util.UUID
 
 object MemberTypeMother {
 
-    fun random(): Membership = listOf(casual(), academyBeginner(), academyIntermediate(), competition()).random()
+    fun random(): Membership = listOf(casual(), academyBeginner(), academyIntermediate(), competition(), coach()).random()
 
     fun casual(): Membership = Membership.Casual()
 
@@ -33,6 +33,8 @@ object MemberTypeMother {
     fun competition(
         team: Team = Team.values().random()
     ): Membership = Membership.Competition(team)
+
+    fun coach(): Membership = Membership.Coach()
 }
 
 object MemberIdMother {

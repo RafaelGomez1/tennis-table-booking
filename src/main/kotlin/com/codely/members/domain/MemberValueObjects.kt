@@ -68,6 +68,7 @@ sealed class Membership {
     }
     data class AcademyIntermediate(val price: Price = Price(18)) : Membership()
     data class Competition(val team: Team, val price: Price = Price(25)) : Membership()
+    data class Coach(val price: Price = Price(0)) : Membership()
 
     fun academyGroups(): List<String> = when (this) {
         is AcademyBeginner -> groups.map { it.name }
@@ -85,6 +86,7 @@ sealed class Membership {
             is AcademyBeginner -> "ACADEMY_BEGINNER"
             is AcademyIntermediate -> "ACADEMY_INTERMEDIATE"
             is Competition -> "COMPETITION"
+            is Coach -> "COACH"
         }
 
     fun membership(): Price =
@@ -93,6 +95,7 @@ sealed class Membership {
             is AcademyBeginner -> priceBasedOnHours()
             is AcademyIntermediate -> price
             is Competition -> price
+            is Coach -> price
         }
 
     companion object {
@@ -102,6 +105,7 @@ sealed class Membership {
                 "ACADEMY_BEGINNER" -> AcademyBeginner(listOf(AcademyGroup.MONDAY_6_7))
                 "ACADEMY_INTERMEDIATE" -> AcademyIntermediate()
                 "COMPETITION" -> Competition(Team.TWO_A)
+                "COACH" -> Coach()
                 else -> null
             }
 
@@ -111,6 +115,7 @@ sealed class Membership {
                 "ACADEMY_BEGINNER" -> AcademyBeginner(academyGroups!!.map { AcademyGroup.valueOf(it) })
                 "ACADEMY_INTERMEDIATE" -> AcademyIntermediate()
                 "COMPETITION" -> Competition(Team.valueOf(team!!))
+                "COACH" -> Coach()
                 else -> throw IllegalArgumentException("Unknown MemberType: $value")
             }
     }

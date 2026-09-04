@@ -11,9 +11,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus.BAD_REQUEST
+import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.HttpStatus.NO_CONTENT
 import java.time.LocalDate
@@ -86,5 +88,21 @@ class DeleteMemberTest {
 
         assertEquals(BAD_REQUEST, result.statusCode)
         assertEquals(ServerError.of(INVALID_IDENTIFIERS), result.body)
+    }
+
+    @Test
+    fun `should fail without deleting member when departure creation fails`() = runTest {
+        val member = MemberMother.casual()
+        memberRepository.save(member)
+
+        val result = controller.delete(member.id.value.toString(), "invalid-date")
+
+        assertEquals(INTERNAL_SERVER_ERROR, result.statusCode)
+        assertEquals(
+            ServerError.of("error" to "Failed to create departure record"),
+            result.body
+        )
+        assertTrue(memberRepository.resourceExistsById(member.id))
+        assertEquals(0, departureRepository.findAll().size)
     }
 }

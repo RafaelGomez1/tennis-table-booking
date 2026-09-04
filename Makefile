@@ -13,7 +13,7 @@ spotless:
 	./gradlew spotlessKotlinApply
 
 compile:
-	./gradlew compileKotlin compileTestKotlin compileIntTestKotlin compileTestFixturesKotlin --console=plain
+	./gradlew compileKotlin compileTestKotlin compileTestFixturesKotlin --console=plain
 
 integration-test:
 	./gradlew integrationTest

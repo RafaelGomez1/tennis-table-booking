@@ -10,7 +10,9 @@ class FakeDepartureRepository : DepartureRepository, FakeRepository<DepartureId,
     override val errors = mutableListOf<Throwable>()
 
     override suspend fun save(departure: Departure) {
-        elements.saveOrUpdate(departure, departure.id)
+        failIfConfiguredOrElse {
+            elements.saveOrUpdate(departure, departure.id)
+        }
     }
 
     override suspend fun findAll(): List<Departure> =

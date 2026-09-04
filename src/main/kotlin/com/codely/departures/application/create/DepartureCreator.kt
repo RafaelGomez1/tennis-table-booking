@@ -9,21 +9,16 @@ import com.codely.members.domain.Member
 import java.time.LocalDate
 
 context(DepartureRepository, Raise<CreateDepartureError>)
-suspend fun handle(command: CreateDepartureCommand): Departure {
-    val departureDate = catch({ DepartureDate(LocalDate.parse(command.departureDateStr)) }) {
+suspend fun createDeparture(member: Member, departureDateStr: String): Departure {
+    val departureDate = catch({ DepartureDate(LocalDate.parse(departureDateStr)) }) {
         raise(CreateDepartureError.InvalidDateFormat)
     }
 
-    val departure = Departure.fromMember(command.member, departureDate)
+    val departure = Departure.fromMember(member, departureDate)
     save(departure)
 
     return departure
 }
-
-data class CreateDepartureCommand(
-    val member: Member,
-    val departureDateStr: String
-)
 
 sealed class CreateDepartureError {
     data object InvalidDateFormat : CreateDepartureError()

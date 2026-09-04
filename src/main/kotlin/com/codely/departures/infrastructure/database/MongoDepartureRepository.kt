@@ -27,6 +27,6 @@ class MongoDepartureRepository(private val repository: JpaDepartureRepository) :
 
     override suspend fun findById(id: DepartureId): Departure? =
         withIOContext {
-            repository.findById(id.value.toString()).orElse(null)?.toDeparture()
+            repository.findById(id.value.toString())?.toDeparture()
         }
 }

@@ -25,7 +25,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document(collection = "Departures")
-class DepartureDocument(
+data class DepartureDocument(
     @Id
     val id: String,
     val memberId: String,

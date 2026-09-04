@@ -20,10 +20,7 @@ suspend fun handle(command: DeleteMemberCommand) {
     val departureDate = command.departureDate ?: LocalDate.now().toString()
 
     catch({
-        recover({
-            createDeparture(member, departureDate)
-            Unit
-        }) { _: CreateDepartureError ->
+        recover({ createDeparture(member, departureDate) }) { _: CreateDepartureError ->
             raise(DeleteMemberError.FailedToCreateDeparture)
         }
     }) {

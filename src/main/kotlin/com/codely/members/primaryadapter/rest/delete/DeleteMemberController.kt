@@ -21,7 +21,6 @@ import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -31,15 +30,12 @@ class DeleteMemberController(
 ) : BaseController() {
 
     @DeleteMapping("/api/members/{memberId}")
-    suspend fun delete(
-        @PathVariable memberId: String,
-        @RequestParam(required = false) departureDate: String?
-    ): Response<*> =
+    suspend fun delete(@PathVariable memberId: String): Response<*> =
         coroutineScope {
             with(memberRepository) {
                 with(departureRepository) {
                     fold(
-                        block = { handle(DeleteMemberCommand(memberId, departureDate)) },
+                        block = { handle(DeleteMemberCommand(memberId)) },
                         recover = { error -> error.toServerError() },
                         transform = { Response.status(NO_CONTENT).body(null) }
                     )

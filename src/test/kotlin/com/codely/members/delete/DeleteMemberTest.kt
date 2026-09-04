@@ -38,19 +38,19 @@ class DeleteMemberTest {
         val member = MemberMother.casual()
         memberRepository.save(member)
 
-        val result = controller.delete(member.id.value.toString(), null)
+        val result = controller.delete(member.id.value.toString())
 
         assertEquals(NO_CONTENT, result.statusCode)
         assertFalse(memberRepository.resourceExistsById(member.id))
     }
 
     @Test
-    fun `should create departure when deleting member with departure date`() = runTest {
+    fun `should create departure when deleting member`() = runTest {
         val member = MemberMother.casual()
         memberRepository.save(member)
-        val departureDate = LocalDate.of(2025, 9, 1).toString()
+        val departureDate = LocalDate.now().toString()
 
-        val result = controller.delete(member.id.value.toString(), departureDate)
+        val result = controller.delete(member.id.value.toString())
 
         assertEquals(NO_CONTENT, result.statusCode)
         assertFalse(memberRepository.resourceExistsById(member.id))
@@ -61,22 +61,10 @@ class DeleteMemberTest {
     }
 
     @Test
-    fun `should delete member without departure if no departure date provided`() = runTest {
-        val member = MemberMother.casual()
-        memberRepository.save(member)
-
-        val result = controller.delete(member.id.value.toString(), null)
-
-        assertEquals(NO_CONTENT, result.statusCode)
-        assertFalse(memberRepository.resourceExistsById(member.id))
-        assertEquals(0, departureRepository.findAll().size)
-    }
-
-    @Test
     fun `should fail if member does not exist`() = runTest {
         val member = MemberMother.casual()
 
-        val result = controller.delete(member.id.value.toString(), null)
+        val result = controller.delete(member.id.value.toString())
 
         assertEquals(NOT_FOUND, result.statusCode)
         assertEquals(ServerError.of(MEMBER_NOT_FOUND), result.body)
@@ -84,7 +72,7 @@ class DeleteMemberTest {
 
     @Test
     fun `should fail if id is not a valid UUID`() = runTest {
-        val result = controller.delete("not-a-uuid", null)
+        val result = controller.delete("not-a-uuid")
 
         assertEquals(BAD_REQUEST, result.statusCode)
         assertEquals(ServerError.of(INVALID_IDENTIFIERS), result.body)
@@ -94,8 +82,9 @@ class DeleteMemberTest {
     fun `should fail without deleting member when departure creation fails`() = runTest {
         val member = MemberMother.casual()
         memberRepository.save(member)
+        departureRepository.shouldFailWith(RuntimeException("boom"))
 
-        val result = controller.delete(member.id.value.toString(), "invalid-date")
+        val result = controller.delete(member.id.value.toString())
 
         assertEquals(INTERNAL_SERVER_ERROR, result.statusCode)
         assertEquals(
